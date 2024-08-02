@@ -39,9 +39,19 @@ export default class DetailDatasourceImpl extends DetailDatasource {
             throw new Error("Method not implemented.");
         }
     }
-    async getDetailsByInvoiceId(invoiceId: number): Promise<DetailEntity[] | null> {
+    async getDetailsByInvoiceId(invoiceId: number): Promise<DetailEntity[]> {
         try {
-            throw new Error("Method not implemented.");
+            let details = await DetailSequelize.findAll({ where: { invoiceId: invoiceId } })
+
+            let detailEntity: DetailEntity[] = []
+            for (let i = 0; i < details.length; i++) {
+                const element = details[i];
+                element.additionalDetails = await new AdditionalDetailDatasourceImpl().getAdditionalDetailsByDetailId(element.id)
+                element.taxes = await new TaxDatasourceImpl().getTaxesByDetailId(element.id)
+                detailEntity.push(DetailEntity.create(element))
+            }
+
+            return detailEntity
         } catch (error) {
             if (error instanceof Error) {
                 throw new Error(error.message)

@@ -8,6 +8,10 @@ import { ReimbursementSequelize } from "./models/invoice/Reimbursement"
 import { TaxDetailSequelize } from "./models/invoice/reimbursement/TaxDetail"
 import { ReimbursementCompensationSequelize } from "./models/invoice/reimbursement/ReimbursementCompensation"
 import { WithHoldingSequelize } from "./models/invoice/WithHolding"
+import { CompensationSequelize } from "./models/invoice/Compensation"
+import { TotalWithTaxSequelize } from "./models/invoice/TotalWithTax"
+import { PaymentSequelize } from "./models/invoice/Payment"
+import { InvoiceAdditionalDetailSequelize } from "./models/invoice/InvoiceAdditionalDetail"
 
 export const DbSequelize = (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
@@ -15,6 +19,9 @@ export const DbSequelize = (): Promise<void> => {
             await InvoiceSequelize.sync()
             await FinancialInformationSequelize.sync()
             await InvoiceInfoSequelize.sync()
+            await PaymentSequelize.sync()
+            await CompensationSequelize.sync()
+            await TotalWithTaxSequelize.sync()
             await DetailSequelize.sync()
             await AdditionalDetailSequelize.sync()
             await TaxSequelize.sync()
@@ -22,6 +29,7 @@ export const DbSequelize = (): Promise<void> => {
             await TaxDetailSequelize.sync()
             await ReimbursementCompensationSequelize.sync()
             await WithHoldingSequelize.sync()
+            await InvoiceAdditionalDetailSequelize.sync()
             resolve()
         } catch (error) {
             reject(error)

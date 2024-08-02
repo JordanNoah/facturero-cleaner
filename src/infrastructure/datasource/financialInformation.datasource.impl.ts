@@ -65,7 +65,19 @@ export class FinancialInformationDatasourceImpl extends FinancialInformationData
     getFinancialInformationByUuid(uuid: string): Promise<FinancialInformationEntity | null> {
         throw new Error("Method not implemented.");
     }
-    getFinancialInformationByInvoiceId(invoiceId: number): Promise<FinancialInformationEntity | null> {
-        throw new Error("Method not implemented.");
+    async getFinancialInformationByInvoiceId(invoiceId: number): Promise<FinancialInformationEntity | null> {
+        try {
+            const financialInformation = await FinancialInformationSequelize.findOne({
+                where:{
+                    invoiceId: invoiceId
+                }
+            })
+            if(!financialInformation) return null
+            return FinancialInformationEntity.create(financialInformation)
+        } catch (error) {
+            console.log(error);
+            
+            throw new Error("Method not implemented.");
+        }
     }
 }

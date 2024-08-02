@@ -23,7 +23,7 @@ export class InvoiceRoutes {
         router.get("/uuid/:uuid", async (c: Context) => {
             try {
                 const uuid = c.req.param('uuid')
-                return c.json(await repository.getInvoiceByUuid(uuid))
+                return c.json(await repository.getInvoiceByUuid(uuid,true))
             } catch (error) {
                 return c.json({ message: "Error finding invoice", error })
             }
@@ -44,7 +44,6 @@ export class InvoiceRoutes {
                 const [error,invoiceDto] = InvoiceDto.save(body)
                 if(error) return c.json({ message: "Error creating invoice", error })
                 const invoice = await repository.saveInvoice(invoiceDto!)
-                console.log(invoice);
             
                 return c.json(invoice)
             } catch (error) {

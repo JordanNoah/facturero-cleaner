@@ -1,5 +1,6 @@
 export default class TotalWithTaxesDto {
     constructor(
+        public uuid: string | null,
         public code: number | null,
         public percentageCode: number | null,
         public additionalDiscount: number | null,
@@ -10,11 +11,12 @@ export default class TotalWithTaxesDto {
     ){}
 
     static create(object:{[key:string]:any}): [string?, TotalWithTaxesDto?] {
-        const {code, percentageCode, additionalDiscount, taxableBase, rate, value, taxRefundValue} = object
+        const {uuid, code, percentageCode, additionalDiscount, taxableBase, rate, value, taxRefundValue} = object
 
         return [
             undefined,
             new TotalWithTaxesDto(
+                uuid,
                 code,
                 percentageCode,
                 additionalDiscount,
@@ -27,7 +29,7 @@ export default class TotalWithTaxesDto {
     }
 
     static save(object:{[key:string]:any}): [string?, TotalWithTaxesDto?] {
-        const {code, percentageCode, additionalDiscount, taxableBase, rate, value, taxRefundValue} = object
+        const {uuid, code, percentageCode, additionalDiscount, taxableBase, rate, value, taxRefundValue} = object
 
         if(!code) return ["Code is required", undefined]
         if(!percentageCode) return ["Percentage code is required", undefined]
@@ -40,6 +42,7 @@ export default class TotalWithTaxesDto {
         return [
             undefined,
             new TotalWithTaxesDto(
+                uuid,
                 code,
                 percentageCode,
                 additionalDiscount,

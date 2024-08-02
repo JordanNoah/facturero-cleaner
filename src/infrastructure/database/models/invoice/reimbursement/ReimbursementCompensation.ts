@@ -7,7 +7,7 @@ interface ReimbursementCompensationRow {
     code: number,
     rate: number,
     value: number,
-    reimbursementId: number,
+    reimbursement_id: number,
     createdAt?: Date,
     updatedAt?: Date,
     deletedAt?: Date
@@ -19,7 +19,7 @@ export class ReimbursementCompensationSequelize extends Model<ReimbursementCompe
     declare code: number
     declare rate: number
     declare value: number
-    declare reimbursementId: number
+    declare reimbursement_id: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
     declare readonly deletedAt: Date
@@ -49,7 +49,7 @@ ReimbursementCompensationSequelize.init({
         type: DataTypes.DECIMAL,
         allowNull:false
     },
-    reimbursementId:{
+    reimbursement_id:{
         type: DataTypes.INTEGER,
         allowNull:false
     }

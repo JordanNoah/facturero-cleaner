@@ -7,5 +7,5 @@ export abstract class ReimbursementDatasource {
     abstract updateReimbursement(): Promise<any>
     abstract deleteReimbursement(uuid:string): Promise<any>
     abstract getReimbursementByUuid(uuid:string): Promise<any>
-    abstract getReimbursementsByInvoiceId(invoiceId: number): Promise<any>
+    abstract getReimbursementsByInvoiceId(invoiceId: number): Promise<ReimbursementEntity[]>
 }

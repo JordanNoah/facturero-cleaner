@@ -1,4 +1,4 @@
-export default class WhitHoldingEntity {
+export default class WithHoldingEntity {
     constructor(
         public id: number,
         public uuid: string,
@@ -12,9 +12,9 @@ export default class WhitHoldingEntity {
         public deletedAt: Date | null
     ){}
 
-    static create(object:{[key:string]:any}): WhitHoldingEntity {
+    static create(object:{[key:string]:any}): WithHoldingEntity {
         const { id, uuid, code, percentageCode, rate, value, invoiceId, createdAt, updatedAt, deletedAt } = object
-        return new WhitHoldingEntity(
+        return new WithHoldingEntity(
             id,
             uuid,
             code,

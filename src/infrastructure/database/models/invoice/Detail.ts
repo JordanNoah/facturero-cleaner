@@ -102,3 +102,21 @@ DetailSequelize.init({
     timestamps: true,
     paranoid: true
 })
+
+DetailSequelize.hasMany(
+    AdditionalDetailSequelize,
+    {
+        sourceKey: 'id',
+        foreignKey: 'detailId',
+        as: 'additionalDetails'
+    }
+)
+
+DetailSequelize.hasMany(
+    TaxSequelize,
+    {
+        sourceKey: 'id',
+        foreignKey: 'detailId',
+        as: 'taxes'
+    }
+)

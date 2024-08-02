@@ -1,5 +1,6 @@
 export default class PaymentDto {
     constructor(
+        public uuid: string | null,
         public paymentMethod: number | null,
         public total: number | null,
         public term: number | null,
@@ -7,11 +8,12 @@ export default class PaymentDto {
     ){}
 
     static create(object:{[key:string]:any}): [string?, PaymentDto?] {
-        const {paymentMethod, total, term, timeUnit} = object
+        const {uuid, paymentMethod, total, term, timeUnit} = object
 
         return [
             undefined,
             new PaymentDto(
+                uuid,
                 paymentMethod,
                 total,
                 term,
@@ -21,7 +23,7 @@ export default class PaymentDto {
     }
 
     static save(object:{[key:string]:any}): [string?, PaymentDto?] {
-        const {paymentMethod, total, term, timeUnit} = object
+        const {uuid ,paymentMethod, total, term, timeUnit} = object
 
         if(!paymentMethod) return ["Payment method is required", undefined]
         if(!total) return ["Total is required", undefined]
@@ -31,6 +33,7 @@ export default class PaymentDto {
         return [
             undefined,
             new PaymentDto(
+                uuid,
                 paymentMethod,
                 total,
                 term,

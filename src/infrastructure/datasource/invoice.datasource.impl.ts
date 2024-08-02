@@ -13,6 +13,21 @@ import ReimbursementEntity from "../../domain/entities/invoice/reimbursement.ent
 import { ReimbursementDatasourceImpl } from "./reimbursement.datasource.impl";
 import WhitHoldingEntity from "../../domain/entities/invoice/withHolding.entity";
 import { WithHoldingDataSourceImpl } from "./withHolding.datasource.impl";
+import { FinancialInformationSequelize } from "../database/models/invoice/FinancialInformation";
+import { InvoiceInfoSequelize } from "../database/models/invoice/InvoiceInfo";
+import TotalWithTaxesDto from "../../domain/dtos/invoice/totalWithTaxes.dto";
+import { TotalWithTaxSequelize } from "../database/models/invoice/TotalWithTax";
+import { CompensationSequelize } from "../database/models/invoice/Compensation";
+import { PaymentSequelize } from "../database/models/invoice/Payment";
+import { DetailSequelize } from "../database/models/invoice/Detail";
+import { AdditionalDetailSequelize } from "../database/models/invoice/AdditionalDetail";
+import { TaxSequelize } from "../database/models/invoice/Tax";
+import { ReimbursementSequelize } from "../database/models/invoice/Reimbursement";
+import { AdditionalDetailDatasource } from "../../domain/datasource/additionalDetail.datasource";
+import AdditionalDetailDatasourceImpl from "./additionalDetail.datasource.impl";
+import AdditionalDetailEntity from "../../domain/entities/invoice/additionalDetail.entity";
+import { InvoiceAdditionalDetailEntity } from "../../domain/entities/invoice/invoiceAdditionalDetail.entity";
+import { InvoiceAdditionalDetailDatasourceImpl } from "./invoiceAdditionalDetail.datasource.impl";
 
 export class InvoiceDatasourceImpl extends InvoiceDatasource {
     async createInvoice(): Promise<InvoiceEntity> {
@@ -40,15 +55,23 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
             throw new Error("Method not implemented.");
         }
     }
-    async getInvoiceByUuid(uuid: string): Promise<InvoiceEntity | null> {
+    async getInvoiceByUuid(uuid: string, withIncludes: boolean = false): Promise<InvoiceEntity | null> {
         try {
             const invoice = await InvoiceSequelize.findOne({
                 where: {
                     uuid: uuid
                 }
             })
+            
             if(!invoice) return null
-            return InvoiceEntity.create(invoice)
+
+            invoice.financialInformation = await new FinancialInformationDatasourceImpl().getFinancialInformationByInvoiceId(invoice.id)
+            invoice.invoiceInfo = await new InvoiceInfoDatasourceImpl().getInvoiceInfoByInvoiceId(invoice.id)
+            invoice.details = await new DetailDatasourceImpl().getDetailsByInvoiceId(invoice.id)
+            invoice.reimbursements = await new ReimbursementDatasourceImpl().getReimbursementsByInvoiceId(invoice.id)
+            invoice.withHoldings = await new WithHoldingDataSourceImpl().getWithHoldingsByInvoiceId(invoice.id)
+            invoice.invoiceAdditionalDetails = await new InvoiceAdditionalDetailDatasourceImpl().getInvoiceAdditionalDetailsByInvoiceId(invoice.id)
+            return InvoiceEntity.getSequelize(invoice)
         } catch (error) {
             console.log(error);
             
@@ -59,8 +82,11 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
         try {
             let invoiceEntity: InvoiceEntity;
             if(!invoiceDto.invoice) invoiceEntity = await this.createInvoice();
-            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
+            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, true); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
             
+            console.log("llegue hasta aca?");
+            
+
             const financialInformation = await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id)
             const invoiceInfo = await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id)
             let details: DetailEntity[] = [];
@@ -82,11 +108,18 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
                 withHoldings.push(await new WithHoldingDataSourceImpl().saveWithHolding(element, invoiceEntity.id))
             }
 
+            let invoiceAdditionalDetails: InvoiceAdditionalDetailEntity[] = [];
+            for (let i = 0; i < invoiceDto.invoiceAdditionalDetailsDto.length; i++) {
+                const element = invoiceDto.invoiceAdditionalDetailsDto[i];
+                invoiceAdditionalDetails.push(await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id))
+            }
+
             invoiceEntity.financialInformation = financialInformation
             invoiceEntity.invoiceInfo = invoiceInfo
             invoiceEntity.details = details
             invoiceEntity.reimbursements = reimbursements
             invoiceEntity.withHoldings = withHoldings
+            invoiceEntity.invoiceAdditionalDetails = invoiceAdditionalDetails
             return invoiceEntity
         } catch (error) {
             console.log(error);

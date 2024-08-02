@@ -7,5 +7,5 @@ export abstract class DetailDatasource {
     abstract updateDetail(): Promise<any>
     abstract deleteDetail(uuid:string): Promise<DetailEntity>
     abstract getDetailByUuid(uuid:string): Promise<DetailEntity | null>
-    abstract getDetailsByInvoiceId(invoiceId: number): Promise<DetailEntity[] | null>
+    abstract getDetailsByInvoiceId(invoiceId: number): Promise<DetailEntity[]>
 }

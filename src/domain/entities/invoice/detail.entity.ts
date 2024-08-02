@@ -24,6 +24,17 @@ export default class DetailEntity {
 
     static create(object:{[key:string]:any}): DetailEntity {
         const { id, uuid, invoiceId, mainCode, auxiliaryCode, description, unitOfMeasure, quantity, unitPrice, priceWithoutSubsidy, discount, totalPriceWithoutTax, additionalDetails, taxes,createdAt, updatedAt, deletedAt } = object
+
+        let additionalDetailsEntity: AdditionalDetailEntity[] = []
+        for (let i = 0; i < additionalDetails.length; i++) {
+            additionalDetailsEntity.push(AdditionalDetailEntity.create(additionalDetails[i]));
+        }
+
+        let taxesEntity: TaxEntity[] = []
+        for (let i = 0; i < taxes.length; i++) {
+            taxesEntity.push(TaxEntity.create(taxes[i]));
+        }
+        
         return new DetailEntity(
             id,
             uuid,
@@ -37,8 +48,8 @@ export default class DetailEntity {
             priceWithoutSubsidy,
             discount,
             totalPriceWithoutTax,
-            additionalDetails,
-            taxes,
+            additionalDetailsEntity,
+            taxesEntity,
             createdAt,
             updatedAt,
             deletedAt ? deletedAt : null

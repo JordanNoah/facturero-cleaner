@@ -85,7 +85,23 @@ export class ReimbursementDatasourceImpl extends ReimbursementDatasource {
     getReimbursementByUuid(uuid: string): Promise<any> {
         throw new Error("Method not implemented.");
     }
-    getReimbursementsByInvoiceId(invoiceId: number): Promise<any> {
-        throw new Error("Method not implemented.");
+    async getReimbursementsByInvoiceId(invoiceId: number): Promise<ReimbursementEntity[]> {
+        try {
+            const reimbursements = await ReimbursementSequelize.findAll({
+                where: {
+                    invoiceId: invoiceId
+                }
+            })
+
+            for (let i = 0; i < reimbursements.length; i++) {
+                const element = reimbursements[i];
+                element.taxDetails = await new TaxDetailDatasourceImpl().getTaxDetailsByReimbursementId(element.id)
+                element.reimbursementCompensations = await new ReimbursementCompensationDatasourceImpl().getReimbursementCompensationsByReimbursementId(element.id);
+            }
+
+            return reimbursements.map(reimbursement => ReimbursementEntity.create(reimbursement))
+        } catch (error) {
+            throw new Error("Method not implemented.");
+        }
     }
 }

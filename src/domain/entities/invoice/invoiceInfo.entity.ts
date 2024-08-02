@@ -1,3 +1,7 @@
+import CompensationEntity from "./compensation.entity"
+import PaymentEntity from "./payment.entity"
+import TotalWithTaxEntity from "./totalWithTax.entity"
+
 export class InvoiceInfoEntity {
     constructor(
         public id: number,
@@ -37,7 +41,9 @@ export class InvoiceInfoEntity {
         public plate: string,
         public vatWithheldValue: number,
         public incomeTaxWithheldValue: number,
-        public compensations:string,
+        public totalWithTaxes: TotalWithTaxEntity[],
+        public compensations: CompensationEntity[],
+        public payments: PaymentEntity[],
         public invoiceId: number,
         public createdAt: Date,
         public updatedAt: Date,
@@ -45,7 +51,7 @@ export class InvoiceInfoEntity {
     ){}
 
     static create(object:{[key:string]:any}): InvoiceInfoEntity {
-        const { id, uuid, issueDate, establishmentAddress, specialTaxpayer, accountingObligation, foreignTrade, incoTermInvoice, incoTermLocation, countryOfOrigin, portOfShipment, portOfDestination, destinationCountry, acquisitionCountry, buyerIdentificationType, deliveryNote, buyerBusinessName, buyerIdentification, buyerAddress, totalWithoutTaxes, totalSubsidy, incoTermTotalWithoutTaxes, totalDiscount, reimbursementDocCode, totalReimbursementInvoices, totalReimbursementTaxableBase, totalReimbursementTax, tip, internationalFreight, internationalInsurance, customsExpenses, otherTransportExpenses, totalAmount, currency, plate, vatWithheldValue, incomeTaxWithheldValue, compensations, invoiceId, createdAt, updatedAt, deletedAt } = object
+        const { id, uuid, issueDate, establishmentAddress, specialTaxpayer, accountingObligation, foreignTrade, incoTermInvoice, incoTermLocation, countryOfOrigin, portOfShipment, portOfDestination, destinationCountry, acquisitionCountry, buyerIdentificationType, deliveryNote, buyerBusinessName, buyerIdentification, buyerAddress, totalWithoutTaxes, totalSubsidy, incoTermTotalWithoutTaxes, totalDiscount, reimbursementDocCode, totalReimbursementInvoices, totalReimbursementTaxableBase, totalReimbursementTax, tip, internationalFreight, internationalInsurance, customsExpenses, otherTransportExpenses, totalAmount, currency, plate, vatWithheldValue, incomeTaxWithheldValue, totalWithTaxes, compensations, payments, invoiceId, createdAt, updatedAt, deletedAt } = object
         return new InvoiceInfoEntity(
             id,
             uuid,
@@ -84,7 +90,9 @@ export class InvoiceInfoEntity {
             plate,
             vatWithheldValue,
             incomeTaxWithheldValue,
+            totalWithTaxes,
             compensations,
+            payments,
             invoiceId,
             createdAt,
             updatedAt,
