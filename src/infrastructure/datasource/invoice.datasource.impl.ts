@@ -1,5 +1,4 @@
 import InvoiceDatasource from "../../domain/datasource/invoice.datasource"
-import FinancialInformationDto from "../../domain/dtos/invoice/financialInformation.dto";
 import InvoiceDto from "../../domain/dtos/invoice/invoice.dto";
 import { InvoiceEntity } from "../../domain/entities/invoice/invoice.entity";
 import { InvoiceSequelize } from "../database/models/invoice/Invoice";
@@ -8,24 +7,10 @@ import { FinancialInformationDatasourceImpl } from "./financialInformation.datas
 import InvoiceInfoDatasourceImpl from "./invoiceInfo.datasource.impl";
 import DetailDatasourceImpl from "./detail.datasource.impl";
 import DetailEntity from "../../domain/entities/invoice/detail.entity";
-import ReimbursementDto from "../../domain/dtos/invoice/reimbursement.dto";
 import ReimbursementEntity from "../../domain/entities/invoice/reimbursement.entity";
 import { ReimbursementDatasourceImpl } from "./reimbursement.datasource.impl";
 import WhitHoldingEntity from "../../domain/entities/invoice/withHolding.entity";
 import { WithHoldingDataSourceImpl } from "./withHolding.datasource.impl";
-import { FinancialInformationSequelize } from "../database/models/invoice/FinancialInformation";
-import { InvoiceInfoSequelize } from "../database/models/invoice/InvoiceInfo";
-import TotalWithTaxesDto from "../../domain/dtos/invoice/totalWithTaxes.dto";
-import { TotalWithTaxSequelize } from "../database/models/invoice/TotalWithTax";
-import { CompensationSequelize } from "../database/models/invoice/Compensation";
-import { PaymentSequelize } from "../database/models/invoice/Payment";
-import { DetailSequelize } from "../database/models/invoice/Detail";
-import { AdditionalDetailSequelize } from "../database/models/invoice/AdditionalDetail";
-import { TaxSequelize } from "../database/models/invoice/Tax";
-import { ReimbursementSequelize } from "../database/models/invoice/Reimbursement";
-import { AdditionalDetailDatasource } from "../../domain/datasource/additionalDetail.datasource";
-import AdditionalDetailDatasourceImpl from "./additionalDetail.datasource.impl";
-import AdditionalDetailEntity from "../../domain/entities/invoice/additionalDetail.entity";
 import { InvoiceAdditionalDetailEntity } from "../../domain/entities/invoice/invoiceAdditionalDetail.entity";
 import { InvoiceAdditionalDetailDatasourceImpl } from "./invoiceAdditionalDetail.datasource.impl";
 
@@ -65,12 +50,14 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
             
             if(!invoice) return null
 
-            invoice.financialInformation = await new FinancialInformationDatasourceImpl().getFinancialInformationByInvoiceId(invoice.id)
-            invoice.invoiceInfo = await new InvoiceInfoDatasourceImpl().getInvoiceInfoByInvoiceId(invoice.id)
-            invoice.details = await new DetailDatasourceImpl().getDetailsByInvoiceId(invoice.id)
-            invoice.reimbursements = await new ReimbursementDatasourceImpl().getReimbursementsByInvoiceId(invoice.id)
-            invoice.withHoldings = await new WithHoldingDataSourceImpl().getWithHoldingsByInvoiceId(invoice.id)
-            invoice.invoiceAdditionalDetails = await new InvoiceAdditionalDetailDatasourceImpl().getInvoiceAdditionalDetailsByInvoiceId(invoice.id)
+            if (withIncludes) {
+                invoice.financialInformation = await new FinancialInformationDatasourceImpl().getFinancialInformationByInvoiceId(invoice.id)
+                invoice.invoiceInfo = await new InvoiceInfoDatasourceImpl().getInvoiceInfoByInvoiceId(invoice.id)
+                invoice.details = await new DetailDatasourceImpl().getDetailsByInvoiceId(invoice.id)
+                invoice.reimbursements = await new ReimbursementDatasourceImpl().getReimbursementsByInvoiceId(invoice.id)
+                invoice.withHoldings = await new WithHoldingDataSourceImpl().getWithHoldingsByInvoiceId(invoice.id)
+                invoice.invoiceAdditionalDetails = await new InvoiceAdditionalDetailDatasourceImpl().getInvoiceAdditionalDetailsByInvoiceId(invoice.id)
+            }
             return InvoiceEntity.getSequelize(invoice)
         } catch (error) {
             console.log(error);
@@ -82,44 +69,31 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
         try {
             let invoiceEntity: InvoiceEntity;
             if(!invoiceDto.invoice) invoiceEntity = await this.createInvoice();
-            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, true); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
+            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, false); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
             
-            console.log("llegue hasta aca?");
+            await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id)
+            await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id)
             
-
-            const financialInformation = await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id)
-            const invoiceInfo = await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id)
-            let details: DetailEntity[] = [];
-
             for (let i = 0; i < invoiceDto.detailsDto.length; i++) {
                 const element = invoiceDto.detailsDto[i];
-                details.push(await new DetailDatasourceImpl().saveDetail(element, invoiceEntity.id))
+                await new DetailDatasourceImpl().saveDetail(element, invoiceEntity.id)
             }
 
-            let reimbursements: ReimbursementEntity[] = [];
             for (let i = 0; i < invoiceDto.reimbursementsDto.length; i++) {
                 const element = invoiceDto.reimbursementsDto[i];
-                reimbursements.push(await new ReimbursementDatasourceImpl().saveReimbursement(element, invoiceEntity.id))
+                await new ReimbursementDatasourceImpl().saveReimbursement(element, invoiceEntity.id)
             }
 
-            let withHoldings: WhitHoldingEntity[] = [];
             for (let i = 0; i < invoiceDto.withholdingsDto.length; i++) {
                 const element = invoiceDto.withholdingsDto[i];
-                withHoldings.push(await new WithHoldingDataSourceImpl().saveWithHolding(element, invoiceEntity.id))
+                await new WithHoldingDataSourceImpl().saveWithHolding(element, invoiceEntity.id)
             }
 
-            let invoiceAdditionalDetails: InvoiceAdditionalDetailEntity[] = [];
             for (let i = 0; i < invoiceDto.invoiceAdditionalDetailsDto.length; i++) {
                 const element = invoiceDto.invoiceAdditionalDetailsDto[i];
-                invoiceAdditionalDetails.push(await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id))
+                await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id)
             }
 
-            invoiceEntity.financialInformation = financialInformation
-            invoiceEntity.invoiceInfo = invoiceInfo
-            invoiceEntity.details = details
-            invoiceEntity.reimbursements = reimbursements
-            invoiceEntity.withHoldings = withHoldings
-            invoiceEntity.invoiceAdditionalDetails = invoiceAdditionalDetails
             return invoiceEntity
         } catch (error) {
             console.log(error);
