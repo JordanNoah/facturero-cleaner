@@ -1,6 +1,7 @@
 import { AdditionalDetailDto } from "./additionalDetail.dto"
 import { DetailDto } from "./detail.dto"
 import FinancialInformationDto from "./financialInformation.dto"
+import InvoiceAdditionalDetailDto from "./invoiceAdditionalDetail.dto"
 import InvoiceInfoDto from "./invoiceInfo.dto"
 import ReimbursementDto from "./reimbursement.dto"
 import WithHoldingDto from "./withHolding.dto"
@@ -13,7 +14,7 @@ export default class InvoiceDto {
         public detailsDto: DetailDto[],
         public reimbursementsDto: ReimbursementDto[],
         public withholdingsDto: WithHoldingDto[],
-        public additionalDetailsDto: AdditionalDetailDto[]
+        public invoiceAdditionalDetailsDto: InvoiceAdditionalDetailDto[]
     ) {}
 
     static create(object:{[key:string]:any}): [string?, InvoiceDto?] {

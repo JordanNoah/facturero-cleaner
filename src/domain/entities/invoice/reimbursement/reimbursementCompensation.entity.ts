@@ -12,14 +12,14 @@ export default class ReimbursementCompensationEntity {
     ){}
 
     static create(object:{[key:string]:any}): ReimbursementCompensationEntity {
-        const { id, uuid, code, rate, value, reimbursementId, createdAt, updatedAt, deletedAt } = object
+        const { id, uuid, code, rate, value, reimbursement_id, createdAt, updatedAt, deletedAt } = object
         return new ReimbursementCompensationEntity(
             id,
             uuid,
             code,
             rate,
             value,
-            reimbursementId,
+            reimbursement_id,
             createdAt,
             updatedAt,
             deletedAt ? deletedAt : null

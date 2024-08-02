@@ -24,7 +24,7 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
         return this.invoiceDatasource.deleteInvoice(uuid)
     }
 
-    getInvoiceByUuid(uuid:string): Promise<InvoiceEntity | null>{
-        return this.invoiceDatasource.getInvoiceByUuid(uuid)
+    getInvoiceByUuid(uuid:string, withIncludes:boolean): Promise<InvoiceEntity | null>{
+        return this.invoiceDatasource.getInvoiceByUuid(uuid,withIncludes)
     }
 }

@@ -3,6 +3,12 @@ import InvoiceInfoDatasource from "../../domain/datasource/invoiceInfo.datasourc
 import InvoiceInfoDto from "../../domain/dtos/invoice/invoiceInfo.dto";
 import { InvoiceInfoSequelize } from "../database/models/invoice/InvoiceInfo";
 import { InvoiceInfoEntity } from "../../domain/entities/invoice/invoiceInfo.entity";
+import CompensationEntity from "../../domain/entities/invoice/compensation.entity";
+import CompensationDatasourceImpl from "./compensation.datasource.impl";
+import TotalWithTaxEntity from "../../domain/entities/invoice/totalWithTax.entity";
+import TotalWithTaxDatasourceImpl from "./totaWithlTax.datasource.impl";
+import PaymentEntity from "../../domain/entities/invoice/payment.entity";
+import PaymentDatasourceImpl from "./payment.datasource.impl";
 
 export default class InvoiceInfoDatasourceImpl extends InvoiceInfoDatasource {
     async createInvoiceInfo(): Promise<any> {
@@ -29,6 +35,25 @@ export default class InvoiceInfoDatasourceImpl extends InvoiceInfoDatasource {
     async getInvoiceInfoByUuid(uuid: string): Promise<any> {
         try {
             
+        } catch (error) {
+            throw error
+        }
+    }
+    async getInvoiceInfoByInvoiceId(invoiceId: number): Promise<InvoiceInfoEntity | null> {
+        try {
+            const invoiceInfo = await InvoiceInfoSequelize.findOne({
+                where:{
+                    invoiceId:invoiceId
+                }
+            })
+
+            if (!invoiceInfo) return null
+
+            invoiceInfo.totalWithTaxes = await new TotalWithTaxDatasourceImpl().getTotalsWithTaxByInvoiceInfoId(invoiceInfo.id)
+            invoiceInfo.compensations = await new CompensationDatasourceImpl().getCompensationsByInvoiceInfoId(invoiceInfo.id)
+            invoiceInfo.payments = await new PaymentDatasourceImpl().getPaymentsByInvoiceInfoId(invoiceInfo.id)
+
+            return InvoiceInfoEntity.create(invoiceInfo)
         } catch (error) {
             throw error
         }
@@ -79,6 +104,34 @@ export default class InvoiceInfoDatasourceImpl extends InvoiceInfoDatasource {
                     invoiceId: invoiceId
                 }
             })
+
+            let totalWithTaxes: TotalWithTaxEntity[] = []
+
+            for (let i = 0; i < invoiceInfoDto.totalWithTaxes.length; i++) {
+                const element = invoiceInfoDto.totalWithTaxes[i];
+                totalWithTaxes.push(await new TotalWithTaxDatasourceImpl().saveTotalWithTax(element, invoiceInfoDb.id))
+            }
+
+            invoiceInfoDb.totalWithTaxes = totalWithTaxes
+
+            let compesation: CompensationEntity[] = []
+
+            for (let i = 0; i < invoiceInfoDto.compensations.length; i++) {
+                const element = invoiceInfoDto.compensations[i]
+                compesation.push(await new CompensationDatasourceImpl().saveCompensation(element, invoiceInfoDb.id))
+            }
+
+            invoiceInfoDb.compensations = compesation
+        
+            let payments: PaymentEntity[] = []
+
+            for (let i = 0; i < invoiceInfoDto.payments.length; i++) {
+                const element = invoiceInfoDto.payments[i]
+                payments.push(await new PaymentDatasourceImpl().savePayment(element, invoiceInfoDb.id))
+            }
+            
+            invoiceInfoDb.payments = payments
+
             if (create) {
                 return InvoiceInfoEntity.create(invoiceInfoDb);
             }

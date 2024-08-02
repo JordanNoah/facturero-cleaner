@@ -6,5 +6,5 @@ export abstract class InvoiceRepository {
     abstract saveInvoice(invoiceDto: InvoiceDto): Promise<any>
     abstract updateInvoice(): Promise<any>
     abstract deleteInvoice(uuid:string): Promise<InvoiceEntity>
-    abstract getInvoiceByUuid(uuid:string): Promise<InvoiceEntity | null>
+    abstract getInvoiceByUuid(uuid:string,withIncludes:boolean): Promise<InvoiceEntity | null>
 }

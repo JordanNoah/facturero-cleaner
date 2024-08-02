@@ -13,8 +13,18 @@ export class ReimbursementCompensationDatasourceImpl extends ReimbursementCompen
     async getReimbursementCompensationByUuid(uuid: string): Promise<any> {
         throw new Error("Method not implemented.");
     }
-    async getReimbursementCompensationsByReimbursementId(reimbursementId: number): Promise<any> {
-        throw new Error("Method not implemented.");
+    async getReimbursementCompensationsByReimbursementId(reimbursementId: number): Promise<ReimbursementCompensationEntity[]> {
+        try {
+            const reimbursementCompensations = await ReimbursementCompensationSequelize.findAll({
+                where:{
+                    reimbursement_id: reimbursementId
+                }
+            })
+
+            return reimbursementCompensations.map(reimbursementCompensation => ReimbursementCompensationEntity.create(reimbursementCompensation))
+        } catch (error) {
+            throw new Error("Method not implemented.");
+        }
     }
     async saveReimbursementCompensation(reimbursementCompensationDto: ReimbursementCompensationDto, reimbursementId: number): Promise<ReimbursementCompensationEntity> {
         try {
@@ -22,13 +32,13 @@ export class ReimbursementCompensationDatasourceImpl extends ReimbursementCompen
             if (reimbursementCompensationDto.uuid == null) {uuid = v4()} else {uuid = reimbursementCompensationDto.uuid}
             const [reimbursementCompensationDb, create] = await ReimbursementCompensationSequelize.findOrCreate({
                 where:{
-                    reimbursementId: reimbursementId,
+                    reimbursement_id: reimbursementId,
                     uuid: uuid
                 },
                 defaults:{
                     code: reimbursementCompensationDto.code,
                     rate: reimbursementCompensationDto.rate,
-                    reimbursementId: reimbursementId,
+                    reimbursement_id: reimbursementId,
                     uuid: uuid,
                     value: reimbursementCompensationDto.value
                 }

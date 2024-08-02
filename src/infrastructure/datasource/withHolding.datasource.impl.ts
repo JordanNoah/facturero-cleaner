@@ -14,8 +14,17 @@ export class WithHoldingDataSourceImpl extends WithHoldingDataSource {
     getWithHolding(): Promise<number> {
         throw new Error("Method not implemented.");
     }
-    getWithHoldingByInvoiceId(invoiceId: number): Promise<number | null> {
-        throw new Error("Method not implemented.");
+    async getWithHoldingsByInvoiceId(invoiceId: number): Promise<WhitHoldingEntity[]> {
+        try {
+            const withHoldings = await WithHoldingSequelize.findAll({
+                where:{
+                    invoiceId: invoiceId
+                }
+            })
+            return withHoldings.map(withHolding => WhitHoldingEntity.create(withHolding))
+        } catch (error) {
+            throw new Error("Method not implemented.");
+        }
     }
     getWithHoldingByUuid(uuid: string): Promise<number | null> {
         throw new Error("Method not implemented.");

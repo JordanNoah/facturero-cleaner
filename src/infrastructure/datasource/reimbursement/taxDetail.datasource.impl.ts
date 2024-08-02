@@ -14,8 +14,21 @@ export default class TaxDetailDatasourceImpl extends TaxDetailDatasource {
     getTaxDetailByUuid(uuid: string): Promise<TaxDetailEntity | null> {
         throw new Error("Method not implemented.");
     }
-    getTaxDetailsByReimbursementId(reimbursementId: number): Promise<TaxDetailEntity[]> {
-        throw new Error("Method not implemented.");
+    async getTaxDetailsByReimbursementId(reimbursementId: number): Promise<TaxDetailEntity[]> {
+        try {
+            const taxDetails = await TaxDetailSequelize.findAll({
+                where:{
+                    reimbursementId: reimbursementId
+                }
+            })
+
+            return taxDetails.map(taxDetail => TaxDetailEntity.create(taxDetail))
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message)
+            }
+            throw new Error("Method not implemented.");
+        }
     }
     async saveTaxDetail(taxDetailDto: TaxDetailDto, reimbursementId: number): Promise<TaxDetailEntity> {
         try {

@@ -14,8 +14,21 @@ export default class AdditionalDetailDatasourceImpl extends AdditionalDetailData
     getAdditionalDetailByUuid(uuid: string): Promise<AdditionalDetailEntity | null> {
         throw new Error("Method not implemented.");
     }
-    getAdditionalDetailsByDetailId(detailId: number): Promise<AdditionalDetailEntity[]> {
-        throw new Error("Method not implemented.");
+    async getAdditionalDetailsByDetailId(detailId: number): Promise<AdditionalDetailEntity[]> {
+        try {
+            const additionalDetails = await AdditionalDetailSequelize.findAll({
+                where:{
+                    detailId: detailId
+                }
+            })
+
+            return additionalDetails.map(additionalDetail => AdditionalDetailEntity.create(additionalDetail))
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(error.message)
+            }
+            throw new Error("Method not implemented.");
+        }
     }
     async saveAdditionalDetail(additionalDetailDto: AdditionalDetailDto, detailId: number): Promise<AdditionalDetailEntity> {
         try {

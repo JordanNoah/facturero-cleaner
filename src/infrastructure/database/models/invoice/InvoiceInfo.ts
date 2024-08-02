@@ -1,5 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../../sequelize";
+import { CompensationSequelize } from "./Compensation";
+import CompensationEntity from "../../../../domain/entities/invoice/compensation.entity";
+import { TotalWithTaxSequelize } from "./TotalWithTax";
+import TotalWithTaxEntity from "../../../../domain/entities/invoice/totalWithTax.entity";
+import PaymentEntity from "../../../../domain/entities/invoice/payment.entity";
+import { PaymentSequelize } from "./Payment";
 
 interface InvoiceInfoRow {
     id: number,
@@ -84,6 +90,9 @@ export class InvoiceInfoSequelize extends Model<InvoiceInfoRow,Omit<InvoiceInfoR
     declare vatWithheldValue: number
     declare incomeTaxWithheldValue: number
     declare invoiceId: number
+    declare compensations: CompensationSequelize[] | CompensationEntity[]
+    declare totalWithTaxes: TotalWithTaxSequelize[] | TotalWithTaxEntity[]
+    declare payments: PaymentSequelize[] | PaymentEntity[]
     declare readonly createdAt?: Date
     declare readonly updatedAt?: Date
     declare readonly deletedAt?: Date
@@ -251,3 +260,30 @@ InvoiceInfoSequelize.init({
     timestamps: true,
     paranoid: true
 })
+
+InvoiceInfoSequelize.hasMany(
+    TotalWithTaxSequelize,
+    {
+        sourceKey: 'id',
+        foreignKey: 'invoiceInfoId',
+        as: 'totalWithTaxes'
+    }
+)
+
+InvoiceInfoSequelize.hasMany(
+    CompensationSequelize,
+    {
+        sourceKey: 'id',
+        foreignKey: 'invoiceInfoId',
+        as: 'compensations'
+    }
+)
+
+InvoiceInfoSequelize.hasMany(
+    PaymentSequelize,
+    {
+        sourceKey: 'id',
+        foreignKey: 'invoiceInfoId',
+        as: 'payments'
+    }
+)

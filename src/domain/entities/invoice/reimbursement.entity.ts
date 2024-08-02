@@ -42,6 +42,10 @@ export default class ReimbursementEntity {
             updatedAt,
             deletedAt
         } = object
+        
+        console.log(reimbursementCompensations);
+        
+
         return new ReimbursementEntity(
             id,
             uuid,
