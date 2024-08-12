@@ -40,8 +40,8 @@ export default class CompensationDatasourceImpl extends CompensationDatasource {
                     invoiceInfoId: invoiceInfoId,
                     uuid: uuid,
                     code: compensationDto.code,
-                    rate: compensationDto.rate,
-                    value: compensationDto.value
+                    rate: Number(compensationDto.rate!).toPrecision(4),
+                    value: Number(compensationDto.value!).toPrecision(4)
                 }
             })
 
@@ -50,8 +50,8 @@ export default class CompensationDatasourceImpl extends CompensationDatasource {
             }
 
             compensationDb.code = compensationDto.code
-            compensationDb.rate = compensationDto.rate
-            compensationDb.value = compensationDto.value
+            compensationDb.rate = Number(compensationDto.rate!).toPrecision(4),
+            compensationDb.value = Number(compensationDto.value!).toPrecision(4)
             await compensationDb.save()
             return CompensationEntity.create(compensationDb)
         } catch (error) {

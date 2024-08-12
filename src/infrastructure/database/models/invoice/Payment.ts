@@ -6,7 +6,7 @@ interface PaymentRow {
     id: number,
     uuid: string,
     paymentMethod: number | null,
-    total: number | null,
+    total: string | null,
     term: number | null,
     timeUnit: string | null,
     invoiceInfoId: number,
@@ -19,7 +19,7 @@ export class PaymentSequelize extends Model<PaymentRow,Omit<PaymentRow,'id'>> {
     declare id: number
     declare uuid: string
     declare paymentMethod: number | null
-    declare total: number | null
+    declare total: string | null
     declare term: number | null
     declare timeUnit: string | null
     declare invoiceInfoId: number
@@ -43,7 +43,7 @@ PaymentSequelize.init({
         allowNull: true
     },
     total: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: true
     },
     term: {

@@ -13,6 +13,7 @@ import WhitHoldingEntity from "../../domain/entities/invoice/withHolding.entity"
 import { WithHoldingDataSourceImpl } from "./withHolding.datasource.impl";
 import { InvoiceAdditionalDetailEntity } from "../../domain/entities/invoice/invoiceAdditionalDetail.entity";
 import { InvoiceAdditionalDetailDatasourceImpl } from "./invoiceAdditionalDetail.datasource.impl";
+import { ExternalApiRepository } from "../client/externalApiRepository";
 
 export class InvoiceDatasourceImpl extends InvoiceDatasource {
     async createInvoice(): Promise<InvoiceEntity> {
@@ -93,6 +94,8 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
                 const element = invoiceDto.invoiceAdditionalDetailsDto[i];
                 await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id)
             }
+
+            //new ExternalApiRepository().createInvoiceDocs(invoiceEntity)
 
             return invoiceEntity
         } catch (error) {

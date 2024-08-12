@@ -1,4 +1,5 @@
 import InvoiceInfoDto from "../dtos/invoice/invoiceInfo.dto";
+import TotalWithTaxesDto from "../dtos/invoice/totalWithTaxes.dto";
 import { InvoiceInfoEntity } from "../entities/invoice/invoiceInfo.entity";
 
 export default abstract class InvoiceInfoDatasource {
@@ -9,4 +10,5 @@ export default abstract class InvoiceInfoDatasource {
     abstract updateInvoiceInfo(invoiceInfoDto: any): Promise<any>
     abstract deleteInvoiceInfo(uuid:string): Promise<any>
     abstract createInvoiceInfo(): Promise<any>
+    abstract getInvoiceInfoTotalTaxesByCode(code: number, percentageCode:number | null, totalWithTaxes:TotalWithTaxesDto[]): number
 }

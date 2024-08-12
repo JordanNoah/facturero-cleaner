@@ -6,8 +6,8 @@ interface WhitHoldingRow {
     uuid: string,
     code: number,
     percentageCode: number,
-    rate: number,
-    value: number,
+    rate: string,
+    value: string,
     invoiceId: number,
     createdAt?: Date,
     updatedAt?: Date,
@@ -19,8 +19,8 @@ export class WithHoldingSequelize extends Model<WhitHoldingRow,Omit<WhitHoldingR
     declare uuid: string
     declare code: number
     declare percentageCode: number
-    declare rate: number
-    declare value: number
+    declare rate: string
+    declare value: string
     declare invoiceId: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
@@ -48,11 +48,11 @@ WithHoldingSequelize.init({
         allowNull:false
     },
     rate:{
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull:false
     },
     value:{
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull:false
     },
     invoiceId:{

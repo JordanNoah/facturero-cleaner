@@ -27,24 +27,35 @@ interface InvoiceInfoRow {
     buyerBusinessName: string,
     buyerIdentification: string,
     buyerAddress: string,
-    totalWithoutTaxes: number,
-    totalSubsidy: number,
+    totalWithoutTaxes: string,
+    totalSubsidy: string,
     incoTermTotalWithoutTaxes: string,
-    totalDiscount: number,
-    reimbursementDocCode: number,
-    totalReimbursementInvoices: number,
-    totalReimbursementTaxableBase: number,
-    totalReimbursementTax: number,
-    tip: number,
-    internationalFreight: number,
-    internationalInsurance: number,
-    customsExpenses: number,
-    otherTransportExpenses: number,
-    totalAmount: number,
+    totalDiscount: string,
+    reimbursementDocCode: string,
+    totalReimbursementInvoices: string,
+    totalReimbursementTaxableBase: string,
+    totalReimbursementTax: string,
+    tip: string,
+    internationalFreight: string,
+    internationalInsurance: string,
+    customsExpenses: string,
+    otherTransportExpenses: string,
+    totalAmount: string,
     currency: string,
     plate: string,
-    vatWithheldValue: number,
-    incomeTaxWithheldValue: number,
+    vatWithheldValue: string,
+    incomeTaxWithheldValue: string,
+    totalTaxesCodeCero: string,
+    totalTaxesCodeTwo: string,
+    totalTaxesCodeThree: string,
+    totalTaxesCodeFour: string,
+    totalTaxesCodeFive: string,
+    totalTaxesCodeSix: string,
+    totalTaxesCodeSeven: string,
+    totalTaxesCodeEight: string,
+    totalTaxesCodeTen: string,
+    totalIce: string,
+    totalIrbpnr: string,
     invoiceId: number,
     createdAt?: Date,
     updatedAt?: Date,
@@ -71,24 +82,35 @@ export class InvoiceInfoSequelize extends Model<InvoiceInfoRow,Omit<InvoiceInfoR
     declare buyerBusinessName: string
     declare buyerIdentification: string
     declare buyerAddress: string
-    declare totalWithoutTaxes: number
-    declare totalSubsidy: number
+    declare totalWithoutTaxes: string
+    declare totalSubsidy: string
     declare incoTermTotalWithoutTaxes: string
-    declare totalDiscount: number
-    declare reimbursementDocCode: number
-    declare totalReimbursementInvoices: number
-    declare totalReimbursementTaxableBase: number
-    declare totalReimbursementTax: number
-    declare tip: number
-    declare internationalFreight: number
-    declare internationalInsurance: number
-    declare customsExpenses: number
-    declare otherTransportExpenses: number
-    declare totalAmount: number
+    declare totalDiscount: string
+    declare reimbursementDocCode: string
+    declare totalReimbursementInvoices: string
+    declare totalReimbursementTaxableBase: string
+    declare totalReimbursementTax: string
+    declare tip: string
+    declare internationalFreight: string
+    declare internationalInsurance: string
+    declare customsExpenses: string
+    declare otherTransportExpenses: string
+    declare totalAmount: string
     declare currency: string
     declare plate: string
-    declare vatWithheldValue: number
-    declare incomeTaxWithheldValue: number
+    declare vatWithheldValue: string
+    declare incomeTaxWithheldValue: string
+    declare totalTaxesCodeCero: string
+    declare totalTaxesCodeTwo: string
+    declare totalTaxesCodeThree: string
+    declare totalTaxesCodeFour: string
+    declare totalTaxesCodeFive: string
+    declare totalTaxesCodeSix: string
+    declare totalTaxesCodeSeven: string
+    declare totalTaxesCodeEight: string
+    declare totalTaxesCodeTen: string
+    declare totalIce: string
+    declare totalIrbpnr: string
     declare invoiceId: number
     declare compensations: CompensationSequelize[] | CompensationEntity[]
     declare totalWithTaxes: TotalWithTaxSequelize[] | TotalWithTaxEntity[]
@@ -178,11 +200,11 @@ InvoiceInfoSequelize.init({
         allowNull: false
     },
     totalWithoutTaxes: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     totalSubsidy: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     incoTermTotalWithoutTaxes: {
@@ -190,47 +212,47 @@ InvoiceInfoSequelize.init({
         allowNull: false
     },
     totalDiscount: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     reimbursementDocCode: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     totalReimbursementInvoices: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     totalReimbursementTaxableBase: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     totalReimbursementTax: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     tip: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     internationalFreight: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     internationalInsurance: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     customsExpenses: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     otherTransportExpenses: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     totalAmount: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     currency: {
@@ -242,16 +264,72 @@ InvoiceInfoSequelize.init({
         allowNull: false
     },
     vatWithheldValue: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
     },
     incomeTaxWithheldValue: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: false
+    },
+    totalTaxesCodeCero: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeTwo: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeThree: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeFour: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeFive: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeSix: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeSeven: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeEight: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalTaxesCodeTen: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalIce: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
+    },
+    totalIrbpnr: {
+        type: DataTypes.DECIMAL(10,4),
+        allowNull: true,
+        defaultValue: 0
     },
     invoiceId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true,
+        defaultValue: 0
     }
 },{
     sequelize,

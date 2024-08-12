@@ -8,7 +8,7 @@ interface TaxDetailRow {
     percentageCode: number,
     rate: number,
     reimbursementTaxableBase: number,
-    reimbursementTax: number,
+    reimbursementTax: string,
     reimbursementId: number,
     createdAt?: Date,
     updatedAt?: Date,
@@ -22,7 +22,7 @@ export class TaxDetailSequelize extends Model<TaxDetailRow,Omit<TaxDetailRow, 'i
     declare percentageCode: number
     declare rate: number
     declare reimbursementTaxableBase: number
-    declare reimbursementTax: number
+    declare reimbursementTax: string
     declare reimbursementId: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
@@ -58,7 +58,7 @@ TaxDetailSequelize.init({
         allowNull:false
     },
     reimbursementTax:{
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DECIMAL(10,4),
         allowNull:false
     },
     reimbursementId:{
