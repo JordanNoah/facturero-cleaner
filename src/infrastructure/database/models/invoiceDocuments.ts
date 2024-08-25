@@ -4,6 +4,7 @@ import { InvoiceSequelize } from "./invoice/Invoice";
 
 interface InvoiceDocumentRow {
     id: number,
+    uuid: string,
     type: string,
     url: string,
     invoiceId: number,
@@ -14,6 +15,7 @@ interface InvoiceDocumentRow {
 
 export class InvoiceDocumentSequelize extends Model<InvoiceDocumentRow,Omit<InvoiceDocumentRow,'id'>> {
     declare id: number
+    declare uuid: string
     declare type: string
     declare url: string
     declare invoiceId: number
@@ -27,6 +29,11 @@ InvoiceDocumentSequelize.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
+    },
+    uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
     },
     type: {
         type: DataTypes.STRING,

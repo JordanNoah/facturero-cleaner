@@ -1,4 +1,5 @@
 import InvoiceDto from "../dtos/invoice/invoice.dto";
+import PaginationDto from "../dtos/pagination.dto";
 import { InvoiceEntity } from "../entities/invoice/invoice.entity";
 
 export abstract class InvoiceRepository {
@@ -7,4 +8,5 @@ export abstract class InvoiceRepository {
     abstract updateInvoice(): Promise<any>
     abstract deleteInvoice(uuid:string): Promise<InvoiceEntity>
     abstract getInvoiceByUuid(uuid:string,withIncludes:boolean): Promise<InvoiceEntity | null>
+    abstract getInvoicesByPagination(paginationDto:PaginationDto): Promise<InvoiceEntity[]>
 }

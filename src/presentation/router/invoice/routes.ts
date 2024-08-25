@@ -4,12 +4,19 @@ import InvoiceDataSource from "../../../domain/datasource/invoice.datasource";
 import { InvoiceDatasourceImpl } from "../../../infrastructure/datasource/invoice.datasource.impl";
 import { InvoiceRepositoryImpl } from "../../../infrastructure/repositories/invoice.repository.impl";
 import InvoiceDto from "../../../domain/dtos/invoice/invoice.dto";
+import PaginationDto from "../../../domain/dtos/pagination.dto";
+import { QuickAccessInvoiceDatasource } from "../../../domain/datasource/quickAccessInvoice.datasource";
+import QuickAccessInvoiceDatasourceImpl from "../../../infrastructure/datasource/quickAccessInvoice.datasource.impl";
+import QuickAccessInvoiceRepositoryImpl from "../../../infrastructure/repositories/quickAccessInvoice.repository.impl";
 
 export class InvoiceRoutes {
     public get routes(): Hono {
         const router = new Hono()
         const datasource = new InvoiceDatasourceImpl()
         const repository = new InvoiceRepositoryImpl(datasource)
+
+        const quickAccessDatasource = new QuickAccessInvoiceDatasourceImpl()
+        const quickAccessRepository = new QuickAccessInvoiceRepositoryImpl(quickAccessDatasource)
 
         router.post("/create", async (c: Context) => {
             try {
@@ -48,6 +55,18 @@ export class InvoiceRoutes {
                 return c.json(invoice)
             } catch (error) {
                 return c.json({ message: "Error creating invoice", error })
+            }
+        })
+
+        router.get("/getByPagination", async (c: Context) => {
+            try {
+                const [error, paginationDto] = PaginationDto.create(c.req.query())
+                if(error) return c.json({ message: "Error finding invoices", error })
+                const invoices = await quickAccessRepository.getQuickAccessInvoicesByPagination(paginationDto!)
+                
+                return c.json(invoices)
+            } catch (error) {
+                return c.json({ message: "Error finding invoices", error })
             }
         })
 
