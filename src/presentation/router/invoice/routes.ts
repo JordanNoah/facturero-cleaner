@@ -1,8 +1,7 @@
 import { Hono } from "hono";
 import { Context } from "hono";
-import InvoiceDataSource from "../../../domain/datasource/invoice.datasource";
-import { InvoiceDatasourceImpl } from "../../../infrastructure/datasource/invoice.datasource.impl";
-import { InvoiceRepositoryImpl } from "../../../infrastructure/repositories/invoice.repository.impl";
+import { InvoiceDatasourceImpl } from "../../../infrastructure/datasource/invoice/invoice.datasource.impl";
+import { InvoiceRepositoryImpl } from "../../../infrastructure/repositories/invoice/invoice.repository.impl";
 import InvoiceDto from "../../../domain/dtos/invoice/invoice.dto";
 
 export class InvoiceRoutes {
