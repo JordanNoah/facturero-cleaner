@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from 'hono/cors'
 import configuration from "../domain/configuration";
 import { serve } from "@hono/node-server";
 import { Routes } from "./routes";
@@ -16,6 +17,7 @@ export class Server {
     public start() {
         try {
             DbSequelize().then(() => {
+                this.app.use(cors())
                 this.app.route('/api', new Routes().routes)
                 const server = serve({
                     fetch: this.app.fetch,

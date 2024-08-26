@@ -12,12 +12,12 @@ interface ReimbursementRow {
     reimbursementProviderIdentification: string,
     reimbursementProviderCountryCode: number,
     reimbursementProviderType: number,
-    reimbursementDocCode: number,
-    reimbursementDocEstablishment: number,
-    reimbursementDocEmissionPoint: number,
-    reimbursementDocSequential: number,
+    reimbursementDocCode: string,
+    reimbursementDocEstablishment: string,
+    reimbursementDocEmissionPoint: string,
+    reimbursementDocSequential: string,
     reimbursementDocIssueDate: Date,
-    reimbursementDocAuthorizationNumber: number,
+    reimbursementDocAuthorizationNumber: string,
     invoiceId: number,
     createdAt?: Date,
     updatedAt?: Date,
@@ -31,12 +31,12 @@ export class ReimbursementSequelize extends Model<ReimbursementRow,Omit<Reimburs
     declare reimbursementProviderIdentification: string
     declare reimbursementProviderCountryCode: number
     declare reimbursementProviderType: number
-    declare reimbursementDocCode: number
-    declare reimbursementDocEstablishment: number
-    declare reimbursementDocEmissionPoint: number
-    declare reimbursementDocSequential: number
+    declare reimbursementDocCode: string
+    declare reimbursementDocEstablishment: string
+    declare reimbursementDocEmissionPoint: string
+    declare reimbursementDocSequential: string
     declare reimbursementDocIssueDate: Date
-    declare reimbursementDocAuthorizationNumber: number
+    declare reimbursementDocAuthorizationNumber: string
     declare invoiceId: number
     declare taxDetails: TaxDetailEntity[] | TaxDetailSequelize[]
     declare reimbursementCompensations: ReimbursementCompensationEntity[] | ReimbursementCompensationSequelize[]
@@ -73,19 +73,19 @@ ReimbursementSequelize.init({
         allowNull: false
     },
     reimbursementDocCode: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     reimbursementDocEstablishment: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     reimbursementDocEmissionPoint: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     reimbursementDocSequential: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     reimbursementDocIssueDate: {
@@ -93,7 +93,7 @@ ReimbursementSequelize.init({
         allowNull: false
     },
     reimbursementDocAuthorizationNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     invoiceId: {

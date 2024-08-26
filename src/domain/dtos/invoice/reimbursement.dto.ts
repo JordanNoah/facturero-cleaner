@@ -14,7 +14,7 @@ export default class ReimbursementDto {
         public reimbursementDocEmissionPoint: number,
         public reimbursementDocSequential: number,
         public reimbursementDocIssueDate: Date,
-        public reimbursementDocAuthorizationNumber: number,
+        public reimbursementDocAuthorizationNumber: string,
         public taxDetails: TaxDetailDto[],
         public reimbursementCompensations: ReimbursementCompensationDto[]        
     ) {}

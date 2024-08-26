@@ -41,8 +41,8 @@ export class WithHoldingDataSourceImpl extends WithHoldingDataSource {
                 defaults:{
                     code: withHoldingDto.code,
                     percentageCode: withHoldingDto.percentageCode,
-                    rate: withHoldingDto.rate,
-                    value: withHoldingDto.value,
+                    rate: Number(withHoldingDto.rate).toPrecision(4),
+                    value: Number(withHoldingDto.value).toPrecision(4),
                     invoiceId: invoiceId,
                     uuid: uuid
                 }
@@ -52,8 +52,8 @@ export class WithHoldingDataSourceImpl extends WithHoldingDataSource {
             }
             withHoldingDb.code = withHoldingDto.code
             withHoldingDb.percentageCode = withHoldingDto.percentageCode
-            withHoldingDb.rate = withHoldingDto.rate
-            withHoldingDb.value = withHoldingDto.value
+            withHoldingDb.rate = Number(withHoldingDto.rate).toPrecision(4)
+            withHoldingDb.value = Number(withHoldingDto.value).toPrecision(4)
             await withHoldingDb.save()
             return WhitHoldingEntity.create(withHoldingDb)
         } catch (error) {

@@ -5,7 +5,7 @@ export const config: Options = {
     host: configuration.DB_HOST,
     username: configuration.DB_USERNAME,
     password: configuration.DB_PASSWORD,
-    logging: (msg) => {console.log(msg);},
+    logging: (msg) => false,
     port: configuration.DB_PORT,
     database: configuration.DB_NAME,
     dialect: "mysql"

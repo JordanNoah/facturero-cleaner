@@ -1,7 +1,8 @@
-import InvoiceDatasource from "../../../domain/datasource/invoice/invoice.datasource";
-import InvoiceDto from "../../../domain/dtos/invoice/invoice.dto";
-import { InvoiceEntity } from "../../../domain/entities/invoice/invoice.entity";
-import { InvoiceRepository } from "../../../domain/repositories/invoice/invoice.repository";
+import InvoiceDatasource from "../../domain/datasource/invoice.datasource";
+import InvoiceDto from "../../domain/dtos/invoice/invoice.dto";
+import PaginationDto from "../../domain/dtos/pagination.dto";
+import { InvoiceEntity } from "../../domain/entities/invoice/invoice.entity";
+import { InvoiceRepository } from "../../domain/repositories/invoice.repository";
 
 export class InvoiceRepositoryImpl implements InvoiceRepository {
     constructor (
@@ -26,5 +27,9 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
 
     getInvoiceByUuid(uuid:string, withIncludes:boolean): Promise<InvoiceEntity | null>{
         return this.invoiceDatasource.getInvoiceByUuid(uuid,withIncludes)
+    }
+
+    getInvoicesByPagination(paginationDto: PaginationDto): Promise<InvoiceEntity[]> {
+        return this.invoiceDatasource.getInvoicesByPagination(paginationDto)
     }
 }

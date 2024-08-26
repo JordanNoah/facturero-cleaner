@@ -6,8 +6,8 @@ interface CompensationRow {
     id: number,
     uuid: string,
     code: number | null,
-    rate: number | null,
-    value: number | null,
+    rate: string | null,
+    value: string | null,
     invoiceInfoId: number,
     createdAt?: Date,
     updatedAt?: Date,
@@ -18,8 +18,8 @@ export class CompensationSequelize extends Model<CompensationRow,Omit<Compensati
     declare id: number
     declare uuid: string
     declare code: number | null
-    declare rate: number | null
-    declare value: number | null
+    declare rate: string | null
+    declare value: string | null
     declare invoiceInfoId: number
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
@@ -41,11 +41,11 @@ CompensationSequelize.init({
         allowNull: true
     },
     rate: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: true
     },
     value: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10,4),
         allowNull: true
     },
     invoiceInfoId: {

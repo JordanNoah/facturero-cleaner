@@ -5,7 +5,7 @@ export default class PaymentEntity {
         public id: number,
         public uuid: string,
         public paymentMethod: number | null,
-        public total: number | null,
+        public total: string | null,
         public term: number | null,
         public timeUnit: string | null,
         public invoiceInfoId: number,

@@ -37,10 +37,10 @@ export class ReimbursementCompensationDatasourceImpl extends ReimbursementCompen
                 },
                 defaults:{
                     code: reimbursementCompensationDto.code,
-                    rate: reimbursementCompensationDto.rate,
+                    rate: Number(reimbursementCompensationDto.rate).toPrecision(4),
                     reimbursement_id: reimbursementId,
                     uuid: uuid,
-                    value: reimbursementCompensationDto.value
+                    value: Number(reimbursementCompensationDto.value).toPrecision(4)
                 }
             })
             if (create) {
@@ -48,8 +48,8 @@ export class ReimbursementCompensationDatasourceImpl extends ReimbursementCompen
             }
 
             reimbursementCompensationDb.code = reimbursementCompensationDto.code
-            reimbursementCompensationDb.rate = reimbursementCompensationDto.rate
-            reimbursementCompensationDb.value = reimbursementCompensationDto.value
+            reimbursementCompensationDb.rate = Number(reimbursementCompensationDto.rate).toPrecision(4)
+            reimbursementCompensationDb.value = Number(reimbursementCompensationDto.value).toPrecision(4)
             await reimbursementCompensationDb.save()
 
             return ReimbursementCompensationEntity.create(reimbursementCompensationDb)
