@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { QuickAccessInvoiceDatasource } from "../../domain/datasource/quickAccessInvoice.datasource";
+import { QuickAccessInvoiceDatasource } from "../../domain/datasource/invoice/quickAccessInvoice.datasource";
 import QuickAccessInvoiceDto from "../../domain/dtos/invoice/quickAccessInvoice.dto";
 import PaginationDto from "../../domain/dtos/pagination.dto";
 import {QuickAccessInvoiceEntity, QuickAccessInvoicePaginationEntity} from "../../domain/entities/invoice/quickAccessInvoice.entity";

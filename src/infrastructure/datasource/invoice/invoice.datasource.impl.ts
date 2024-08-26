@@ -1,18 +1,21 @@
+import { v4 } from "uuid"
 import InvoiceDatasource from "../../../domain/datasource/invoice/invoice.datasource"
 import InvoiceDto from "../../../domain/dtos/invoice/invoice.dto";
 import { InvoiceEntity } from "../../../domain/entities/invoice/invoice.entity";
 import { InvoiceSequelize } from "../../database/models/invoice/Invoice";
-import { v4 } from "uuid"
 import { FinancialInformationDatasourceImpl } from "./financialInformation.datasource.impl";
 import InvoiceInfoDatasourceImpl from "./invoiceInfo.datasource.impl";
 import DetailDatasourceImpl from "./detail.datasource.impl";
-import DetailEntity from "../../../domain/entities/invoice/detail.entity";
-import ReimbursementEntity from "../../../domain/entities/invoice/reimbursement.entity";
 import { ReimbursementDatasourceImpl } from "./reimbursement.datasource.impl";
-import WhitHoldingEntity from "../../../domain/entities/invoice/withHolding.entity";
 import { WithHoldingDataSourceImpl } from "./withHolding.datasource.impl";
-import { InvoiceAdditionalDetailEntity } from "../../../domain/entities/invoice/invoiceAdditionalDetail.entity";
 import { InvoiceAdditionalDetailDatasourceImpl } from "./invoiceAdditionalDetail.datasource.impl";
+import { ExternalApiRepository } from "../../client/externalApiRepository";
+import QuickAccessInvoiceDto from "../../../domain/dtos/invoice/quickAccessInvoice.dto";
+import QuickAccessInvoiceDatasourceImpl from "../quickAccessInvoice.datasource.impl";
+import PaginationDto from "../../../domain/dtos/pagination.dto";
+import { FinancialInformationSequelize } from "../../database/models/invoice/FinancialInformation";
+import { InvoiceInfoSequelize } from "../../database/models/invoice/InvoiceInfo";
+import { Op } from "sequelize";
 
 export class InvoiceDatasourceImpl extends InvoiceDatasource {
     async createInvoice(): Promise<InvoiceEntity> {

@@ -4,7 +4,6 @@ import { InvoiceDatasourceImpl } from "../../../infrastructure/datasource/invoic
 import { InvoiceRepositoryImpl } from "../../../infrastructure/repositories/invoice/invoice.repository.impl";
 import InvoiceDto from "../../../domain/dtos/invoice/invoice.dto";
 import PaginationDto from "../../../domain/dtos/pagination.dto";
-import { QuickAccessInvoiceDatasource } from "../../../domain/datasource/quickAccessInvoice.datasource";
 import QuickAccessInvoiceDatasourceImpl from "../../../infrastructure/datasource/quickAccessInvoice.datasource.impl";
 import QuickAccessInvoiceRepositoryImpl from "../../../infrastructure/repositories/quickAccessInvoice.repository.impl";
 

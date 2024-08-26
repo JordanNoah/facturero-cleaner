@@ -9,8 +9,7 @@ import TotalWithTaxEntity from "../../../domain/entities/invoice/totalWithTax.en
 import TotalWithTaxDatasourceImpl from "./totaWithlTax.datasource.impl";
 import PaymentEntity from "../../../domain/entities/invoice/payment.entity";
 import PaymentDatasourceImpl from "./payment.datasource.impl";
-import { InvoiceSequelize } from "../database/models/invoice/Invoice";
-import TotalWithTaxesDto from "../../domain/dtos/invoice/totalWithTaxes.dto";
+import TotalWithTaxesDto from "../../../domain/dtos/invoice/totalWithTaxes.dto";
 
 export default class InvoiceInfoDatasourceImpl extends InvoiceInfoDatasource {
     async createInvoiceInfo(): Promise<any> {

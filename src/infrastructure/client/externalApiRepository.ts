@@ -1,6 +1,6 @@
 import {Axios, AxiosResponse} from "./axios";
 import {InvoiceEntity} from "../../domain/entities/invoice/invoice.entity";
-import { InvoiceDatasourceImpl } from "../datasource/invoice.datasource.impl";
+import { InvoiceDatasourceImpl } from "../datasource/invoice/invoice.datasource.impl";
 import InvoiceDocumentDto from "../../domain/dtos/invoice/invoiceDocument.dto";
 import InvoiceDocumentDatasourceImpl from "../datasource/invoiceDocument.datasource.impl";
 

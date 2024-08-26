@@ -1,8 +1,6 @@
 import InvoiceDto from "../../dtos/invoice/invoice.dto";
 import { InvoiceEntity } from "../../entities/invoice/invoice.entity";
-import InvoiceDto from "../dtos/invoice/invoice.dto";
-import PaginationDto from "../dtos/pagination.dto";
-import { InvoiceEntity } from "../entities/invoice/invoice.entity";
+import PaginationDto from "../../dtos/pagination.dto";
 
 export abstract class InvoiceRepository {
     abstract createInvoice(): Promise<InvoiceEntity>

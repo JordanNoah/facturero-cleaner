@@ -1,5 +1,5 @@
-import RegisterProductDto from "../dtos/product/register-product.dto"
-import { ProductEntity } from "../entities/product/product.entity";
+import RegisterProductDto from "../../dtos/product/register-product.dto"
+import { ProductEntity } from "../../entities/product/product.entity";
 
 export abstract class ProductRepository {
     abstract getProducts(): Promise<ProductEntity[]>;

@@ -1,7 +1,7 @@
 import { ProductDatasource } from "../../../domain/datasource/product/product.datasource";
 import RegisterProductDto from "../../../domain/dtos/product/register-product.dto";
 import { ProductEntity } from "../../../domain/entities/product/product.entity";
-import { ProductRepository } from "../../../domain/repositories/product.repository";
+import { ProductRepository } from "../../../domain/repositories/product/product.repository";
 
 export class ProductRepositoryImpl implements ProductRepository {
     constructor(

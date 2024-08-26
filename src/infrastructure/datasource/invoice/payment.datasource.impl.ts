@@ -1,7 +1,7 @@
+import { v4 } from "uuid"
 import PaymentDatasource from "../../../domain/datasource/invoice/payment.datasource";
 import PaymentDto from "../../../domain/dtos/invoice/payment.dto";
 import PaymentEntity from "../../../domain/entities/invoice/payment.entity";
-import { v4 } from "uuid"
 import { PaymentSequelize } from "../../database/models/invoice/Payment";
 
 export default class PaymentDatasourceImpl extends PaymentDatasource {

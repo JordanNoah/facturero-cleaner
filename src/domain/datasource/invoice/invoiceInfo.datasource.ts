@@ -1,8 +1,6 @@
 import InvoiceInfoDto from "../../dtos/invoice/invoiceInfo.dto";
 import { InvoiceInfoEntity } from "../../entities/invoice/invoiceInfo.entity";
-import InvoiceInfoDto from "../dtos/invoice/invoiceInfo.dto";
-import TotalWithTaxesDto from "../dtos/invoice/totalWithTaxes.dto";
-import { InvoiceInfoEntity } from "../entities/invoice/invoiceInfo.entity";
+import TotalWithTaxesDto from "../../dtos/invoice/totalWithTaxes.dto";
 
 export default abstract class InvoiceInfoDatasource {
     abstract getInvoiceInfoByUuid(uuid:string): Promise<any>

@@ -1,6 +1,4 @@
-import InvoiceDto from "../dtos/invoice/invoice.dto";
-import PaginationDto from "../dtos/pagination.dto";
-import { InvoiceEntity } from "../entities/invoice/invoice.entity";
+import PaginationDto from "../../dtos/pagination.dto";
 import InvoiceDto from "../../dtos/invoice/invoice.dto";
 import { InvoiceEntity } from "../../entities/invoice/invoice.entity";
 

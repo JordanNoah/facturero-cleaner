@@ -1,4 +1,4 @@
-import InvoiceDocumentDatasource from "../../domain/datasource/invoiceDocument.datasource";
+import InvoiceDocumentDatasource from "../../domain/datasource/invoice/invoiceDocument.datasource";
 import InvoiceDocumentDto from "../../domain/dtos/invoice/invoiceDocument.dto";
 import InvoiceDocumentEntity from "../../domain/entities/invoice/invoiceDocument.entity";
 import { InvoiceDocumentSequelize } from "../database/models/invoiceDocuments";

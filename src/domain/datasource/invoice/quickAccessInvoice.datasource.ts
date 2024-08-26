@@ -1,6 +1,6 @@
-import QuickAccessInvoiceDto from "../dtos/invoice/quickAccessInvoice.dto";
-import PaginationDto from "../dtos/pagination.dto";
-import {QuickAccessInvoiceEntity, QuickAccessInvoicePaginationEntity} from "../entities/invoice/quickAccessInvoice.entity";
+import QuickAccessInvoiceDto from "../../dtos/invoice/quickAccessInvoice.dto";
+import PaginationDto from "../../dtos/pagination.dto";
+import {QuickAccessInvoiceEntity, QuickAccessInvoicePaginationEntity} from "../../entities/invoice/quickAccessInvoice.entity";
 
 export abstract class QuickAccessInvoiceDatasource {
     abstract createQuickAccessInvoice(): Promise<QuickAccessInvoiceEntity>

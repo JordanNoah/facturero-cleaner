@@ -1,5 +1,5 @@
-import InvoiceDocumentDto from "../dtos/invoice/invoiceDocument.dto";
-import InvoiceDocumentEntity from "../entities/invoice/invoiceDocument.entity";
+import InvoiceDocumentDto from "../../dtos/invoice/invoiceDocument.dto";
+import InvoiceDocumentEntity from "../../entities/invoice/invoiceDocument.entity";
 
 export default abstract class InvoiceDocumentRepository {
     abstract createInvoiceDocument(invoiceDocumentDto:InvoiceDocumentDto): Promise<InvoiceDocumentEntity>
