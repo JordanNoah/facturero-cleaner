@@ -50,12 +50,14 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
             
             if(!invoice) return null
 
-            invoice.financialInformation = await new FinancialInformationDatasourceImpl().getFinancialInformationByInvoiceId(invoice.id)
-            invoice.invoiceInfo = await new InvoiceInfoDatasourceImpl().getInvoiceInfoByInvoiceId(invoice.id)
-            invoice.details = await new DetailDatasourceImpl().getDetailsByInvoiceId(invoice.id)
-            invoice.reimbursements = await new ReimbursementDatasourceImpl().getReimbursementsByInvoiceId(invoice.id)
-            invoice.withHoldings = await new WithHoldingDataSourceImpl().getWithHoldingsByInvoiceId(invoice.id)
-            invoice.invoiceAdditionalDetails = await new InvoiceAdditionalDetailDatasourceImpl().getInvoiceAdditionalDetailsByInvoiceId(invoice.id)
+            if (withIncludes) {
+                invoice.financialInformation = await new FinancialInformationDatasourceImpl().getFinancialInformationByInvoiceId(invoice.id)
+                invoice.invoiceInfo = await new InvoiceInfoDatasourceImpl().getInvoiceInfoByInvoiceId(invoice.id)
+                invoice.details = await new DetailDatasourceImpl().getDetailsByInvoiceId(invoice.id)
+                invoice.reimbursements = await new ReimbursementDatasourceImpl().getReimbursementsByInvoiceId(invoice.id)
+                invoice.withHoldings = await new WithHoldingDataSourceImpl().getWithHoldingsByInvoiceId(invoice.id)
+                invoice.invoiceAdditionalDetails = await new InvoiceAdditionalDetailDatasourceImpl().getInvoiceAdditionalDetailsByInvoiceId(invoice.id)
+            }
             return InvoiceEntity.getSequelize(invoice)
         } catch (error) {
             console.log(error);
@@ -67,44 +69,34 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
         try {
             let invoiceEntity: InvoiceEntity;
             if(!invoiceDto.invoice) invoiceEntity = await this.createInvoice();
-            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, true); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
+            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, false); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
             
-            console.log("llegue hasta aca?");
-            
-
-            const financialInformation = await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id)
-            const invoiceInfo = await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id)
-            let details: DetailEntity[] = [];
+            const financialInformationEntity = await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id!)
+            const invoiceInfo = await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id!)
 
             for (let i = 0; i < invoiceDto.detailsDto.length; i++) {
                 const element = invoiceDto.detailsDto[i];
-                details.push(await new DetailDatasourceImpl().saveDetail(element, invoiceEntity.id))
+                await new DetailDatasourceImpl().saveDetail(element, invoiceEntity.id!)
             }
 
-            let reimbursements: ReimbursementEntity[] = [];
             for (let i = 0; i < invoiceDto.reimbursementsDto.length; i++) {
                 const element = invoiceDto.reimbursementsDto[i];
-                reimbursements.push(await new ReimbursementDatasourceImpl().saveReimbursement(element, invoiceEntity.id))
+                await new ReimbursementDatasourceImpl().saveReimbursement(element, invoiceEntity.id!)
             }
 
-            let withHoldings: WhitHoldingEntity[] = [];
             for (let i = 0; i < invoiceDto.withholdingsDto.length; i++) {
                 const element = invoiceDto.withholdingsDto[i];
-                withHoldings.push(await new WithHoldingDataSourceImpl().saveWithHolding(element, invoiceEntity.id))
+                await new WithHoldingDataSourceImpl().saveWithHolding(element, invoiceEntity.id!)
             }
 
-            let invoiceAdditionalDetails: InvoiceAdditionalDetailEntity[] = [];
             for (let i = 0; i < invoiceDto.invoiceAdditionalDetailsDto.length; i++) {
                 const element = invoiceDto.invoiceAdditionalDetailsDto[i];
-                invoiceAdditionalDetails.push(await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id))
+                await new InvoiceAdditionalDetailDatasourceImpl().saveInvoiceAdditionalDetail(element, invoiceEntity.id!)
             }
 
-            invoiceEntity.financialInformation = financialInformation
-            invoiceEntity.invoiceInfo = invoiceInfo
-            invoiceEntity.details = details
-            invoiceEntity.reimbursements = reimbursements
-            invoiceEntity.withHoldings = withHoldings
-            invoiceEntity.invoiceAdditionalDetails = invoiceAdditionalDetails
+            new ExternalApiRepository().createInvoiceDocs(invoiceEntity)
+            const [errorQuickAcces, quickAccessDto] = QuickAccessInvoiceDto.create({id:invoiceEntity.id, uuid:invoiceEntity.uuid, financialInformation:financialInformationEntity, invoiceInfo:invoiceInfo})
+            await new QuickAccessInvoiceDatasourceImpl().saveQuickAccessInvoice(quickAccessDto!)
             return invoiceEntity
         } catch (error) {
             console.log(error);
@@ -114,5 +106,60 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
     }
     updateInvoice(): Promise<any> {
         throw new Error("Method not implemented.");
+    }
+
+    async getInvoicesByPagination(paginationDto: PaginationDto): Promise<InvoiceEntity[]> {
+        try {
+            let invoices: InvoiceSequelize[] = []
+
+            if(!paginationDto.search || paginationDto.search.length === 0) {
+                invoices = await InvoiceSequelize.findAll({
+                    limit: paginationDto.itemsPerPage,
+                    offset: (paginationDto.page - 1) * paginationDto.itemsPerPage,
+                    include:[
+                        {
+                            model:FinancialInformationSequelize,
+                            as: 'financialInformation'
+                        },
+                        {
+                            model:InvoiceInfoSequelize,
+                            as: 'invoiceInfo'
+                        }
+                    ]
+                })
+            }else{
+                invoices = await InvoiceSequelize.findAll({
+                    limit: paginationDto.itemsPerPage,
+                    offset: (paginationDto.page - 1) * paginationDto.itemsPerPage,
+                    include: [
+                        {
+                            model: FinancialInformationSequelize,
+                            as: 'financialInformation',
+                            where: {
+                                accessKey: { [Op.like]: `%${paginationDto.search}%` }
+                            },
+                            required: false
+                        },
+                        {
+                            model: InvoiceInfoSequelize,
+                            as: 'invoiceInfo',
+                            where: {
+                                [Op.or]: [
+                                    { buyerBusinessName: { [Op.like]: `%${paginationDto.search}%` } },
+                                    { totalAmount: { [Op.like]: `%${paginationDto.search}%` } }
+                                ]
+                            },
+                            required: false
+                        }
+                    ]
+                });
+                console.log(invoices);
+
+            }
+
+            return invoices.map(invoice => InvoiceEntity.pagination(invoice))
+        } catch (error) {
+            throw new Error("Method not implemented.");
+        }
     }
 }

@@ -12,6 +12,8 @@ import { CompensationSequelize } from "./models/invoice/Compensation"
 import { TotalWithTaxSequelize } from "./models/invoice/TotalWithTax"
 import { PaymentSequelize } from "./models/invoice/Payment"
 import { InvoiceAdditionalDetailSequelize } from "./models/invoice/InvoiceAdditionalDetail"
+import { InvoiceDocumentSequelize } from "./models/invoiceDocuments"
+import { QuickAccessInvoiceSequelize } from "./models/invoice/QuickAccessInvoice"
 
 export const DbSequelize = (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
@@ -30,6 +32,8 @@ export const DbSequelize = (): Promise<void> => {
             await ReimbursementCompensationSequelize.sync()
             await WithHoldingSequelize.sync()
             await InvoiceAdditionalDetailSequelize.sync()
+            await InvoiceDocumentSequelize.sync()
+            await QuickAccessInvoiceSequelize.sync()
             resolve()
         } catch (error) {
             reject(error)

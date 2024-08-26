@@ -45,7 +45,7 @@ export default class TaxDetailDatasourceImpl extends TaxDetailDatasource {
                     rate: taxDetailDto.rate,
                     reimbursementId: reimbursementId,
                     uuid: uuid,
-                    reimbursementTax: taxDetailDto.reimbursementTax,
+                    reimbursementTax: Number(taxDetailDto.reimbursementTax).toPrecision(4),
                     reimbursementTaxableBase: taxDetailDto.reimbursementTaxableBase
                 }
             })
@@ -57,7 +57,7 @@ export default class TaxDetailDatasourceImpl extends TaxDetailDatasource {
             taxDetailDb.code = taxDetailDto.code
             taxDetailDb.percentageCode = taxDetailDto.percentageCode
             taxDetailDb.rate = taxDetailDto.rate
-            taxDetailDb.reimbursementTax = taxDetailDto.reimbursementTax
+            taxDetailDb.reimbursementTax = Number(taxDetailDto.reimbursementTax).toPrecision(4)
             taxDetailDb.reimbursementTaxableBase = taxDetailDto.reimbursementTaxableBase
             await taxDetailDb.save()
 

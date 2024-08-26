@@ -7,17 +7,18 @@ import WhitHoldingEntity from "./withHolding.entity"
 
 export class InvoiceEntity {
     constructor(
-        public id:number,
-        public uuid:string,
-        public financialInformation: FinancialInformationEntity | null,
-        public invoiceInfo: InvoiceInfoEntity | null,
-        public details: DetailEntity[],
-        public reimbursements: ReimbursementEntity[],
-        public withHoldings: WhitHoldingEntity[],
-        public invoiceAdditionalDetails: InvoiceAdditionalDetailEntity[],
-        public createdAt:Date,
-        public updatedAt:Date,
-        public deletedAt:Date | null
+        public id?:number,
+        public uuid?:string,
+        public financialInformation?: FinancialInformationEntity | null,
+        public invoiceInfo?: InvoiceInfoEntity | null,
+        public details?: DetailEntity[],
+        public reimbursements?: ReimbursementEntity[],
+        public withHoldings?: WhitHoldingEntity[],
+        public invoiceAdditionalDetails?: InvoiceAdditionalDetailEntity[],
+        public createdAt?:Date,
+        public updatedAt?:Date,
+        public deletedAt?:Date | null,
+        public numberInvoice?:String
     ){}
 
     static create(object:{[key:string]:any}): InvoiceEntity {
@@ -93,6 +94,25 @@ export class InvoiceEntity {
             createdAt,
             updatedAt,
             deletedAt ? deletedAt : null
+        )
+    }
+
+    static pagination(object:{[key:string]:any}): InvoiceEntity {
+        const { id, uuid, financialInformation, invoiceInfo, details, reimbursements, withHoldings, invoiceAdditionalDetails,createdAt, updatedAt, deletedAt } = object
+                
+        return new InvoiceEntity(
+            id,
+            uuid,
+            financialInformation,
+            invoiceInfo,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            null,
+            `${financialInformation.establishment}-${financialInformation.emissionPoint}-${financialInformation.sequential}`
         )
     }
 }

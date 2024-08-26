@@ -43,7 +43,7 @@ export default class PaymentDatasourceImpl extends PaymentDatasource {
                     invoiceInfoId: invoiceInfoId,
                     uuid: uuid,
                     paymentMethod: paymentDto.paymentMethod,
-                    total: paymentDto.total,
+                    total: Number(paymentDto.total)?.toPrecision(4),
                     term: paymentDto.term,
                     timeUnit: paymentDto.timeUnit
                 }
@@ -54,7 +54,7 @@ export default class PaymentDatasourceImpl extends PaymentDatasource {
             }
 
             paymentDb.paymentMethod = paymentDto.paymentMethod
-            paymentDb.total = paymentDto.total
+            paymentDb.total = Number(paymentDto.total!).toPrecision(4)
             paymentDb.term = paymentDto.term
             paymentDb.timeUnit = paymentDto.timeUnit
             await paymentDb.save()

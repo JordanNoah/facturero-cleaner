@@ -24,11 +24,11 @@ export class ReimbursementDatasourceImpl extends ReimbursementDatasource {
                 },
                 defaults: {
                     reimbursementDocAuthorizationNumber: reimbursementDto.reimbursementDocAuthorizationNumber,
-                    reimbursementDocCode: reimbursementDto.reimbursementDocCode,
-                    reimbursementDocEmissionPoint: reimbursementDto.reimbursementDocEmissionPoint,
-                    reimbursementDocEstablishment: reimbursementDto.reimbursementDocEstablishment,
+                    reimbursementDocCode: Number(reimbursementDto.reimbursementDocCode).toPrecision(4),
+                    reimbursementDocEmissionPoint: Number(reimbursementDto.reimbursementDocEmissionPoint).toPrecision(4),
+                    reimbursementDocEstablishment: Number(reimbursementDto.reimbursementDocEstablishment).toPrecision(4),
                     reimbursementDocIssueDate: reimbursementDto.reimbursementDocIssueDate,
-                    reimbursementDocSequential: reimbursementDto.reimbursementDocSequential,
+                    reimbursementDocSequential: Number(reimbursementDto.reimbursementDocSequential).toPrecision(4),
                     reimbursementProviderCountryCode: reimbursementDto.reimbursementProviderCountryCode,
                     reimbursementProviderIdentification: reimbursementDto.reimbursementProviderIdentification,
                     reimbursementProviderIdentificationType: reimbursementDto.reimbursementProviderIdentificationType,
@@ -59,11 +59,11 @@ export class ReimbursementDatasourceImpl extends ReimbursementDatasource {
             }
 
             reimbursementDb.reimbursementDocAuthorizationNumber = reimbursementDto.reimbursementDocAuthorizationNumber
-            reimbursementDb.reimbursementDocCode = reimbursementDto.reimbursementDocCode
-            reimbursementDb.reimbursementDocEmissionPoint = reimbursementDto.reimbursementDocEmissionPoint
-            reimbursementDb.reimbursementDocEstablishment = reimbursementDto.reimbursementDocEstablishment
+            reimbursementDb.reimbursementDocCode = (reimbursementDto.reimbursementDocCode).toPrecision(4)
+            reimbursementDb.reimbursementDocEmissionPoint = (reimbursementDto.reimbursementDocEmissionPoint).toPrecision(4)
+            reimbursementDb.reimbursementDocEstablishment = (reimbursementDto.reimbursementDocEstablishment).toPrecision(4)
             reimbursementDb.reimbursementDocIssueDate = reimbursementDto.reimbursementDocIssueDate
-            reimbursementDb.reimbursementDocSequential = reimbursementDto.reimbursementDocSequential
+            reimbursementDb.reimbursementDocSequential = (reimbursementDto.reimbursementDocSequential).toPrecision(4)
             reimbursementDb.reimbursementProviderCountryCode = reimbursementDto.reimbursementProviderCountryCode
             reimbursementDb.reimbursementProviderIdentification = reimbursementDto.reimbursementProviderIdentification
             reimbursementDb.reimbursementProviderIdentificationType = reimbursementDto.reimbursementProviderIdentificationType
@@ -72,6 +72,8 @@ export class ReimbursementDatasourceImpl extends ReimbursementDatasource {
             await reimbursementDb.save()
             return ReimbursementEntity.create(reimbursementDb)
         } catch (error) {
+            console.log(error);
+            
             throw new Error("Method not implemented.");
         }
     }
