@@ -14,6 +14,9 @@ import { PaymentSequelize } from "./models/invoice/Payment"
 import { InvoiceAdditionalDetailSequelize } from "./models/invoice/InvoiceAdditionalDetail"
 import { InvoiceDocumentSequelize } from "./models/invoiceDocuments"
 import { QuickAccessInvoiceSequelize } from "./models/invoice/QuickAccessInvoice"
+import { ProductSequelize } from "./models/product/Product"
+import { InstitutionSequelize } from "./models/institution/Institution"
+import { ProductTagSequelize } from "./models/product/ProductTags"
 
 export const DbSequelize = (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
@@ -34,6 +37,9 @@ export const DbSequelize = (): Promise<void> => {
             await InvoiceAdditionalDetailSequelize.sync()
             await InvoiceDocumentSequelize.sync()
             await QuickAccessInvoiceSequelize.sync()
+            await InstitutionSequelize.sync()
+            await ProductSequelize.sync()
+            await ProductTagSequelize.sync()
             resolve()
         } catch (error) {
             reject(error)
