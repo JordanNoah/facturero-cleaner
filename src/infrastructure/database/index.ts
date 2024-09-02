@@ -17,6 +17,10 @@ import { QuickAccessInvoiceSequelize } from "./models/invoice/QuickAccessInvoice
 import { ProductSequelize } from "./models/product/Product"
 import { InstitutionSequelize } from "./models/institution/Institution"
 import { ProductTagSequelize } from "./models/product/ProductTags"
+import { CustomerSequelize } from "./models/customer/Customer"
+import { CustomerEmailSequelize } from "./models/customer/CustomerEmail"
+import { CustomerPhoneSequelize } from "./models/customer/CustomerPhone"
+
 
 export const DbSequelize = (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
@@ -40,6 +44,9 @@ export const DbSequelize = (): Promise<void> => {
             await InstitutionSequelize.sync()
             await ProductSequelize.sync()
             await ProductTagSequelize.sync()
+            await CustomerSequelize.sync()
+            await CustomerEmailSequelize.sync()
+            await CustomerPhoneSequelize.sync()
             resolve()
         } catch (error) {
             reject(error)

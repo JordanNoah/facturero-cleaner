@@ -1,33 +1,31 @@
-import { DataTypes, Model } from "sequelize"
-import {sequelize} from "../../sequelize";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../../sequelize"
 
-interface InstitutionRow {
+interface CustomerRow {
     id: number,
     uuid: string,
-    name: string,
-    ruc: string,
-    address: string,
-    hasToAccounting: boolean,
-    abbreviation: string,
+    full_name: string,
+    identification_type: string,
+    identification: string,
     createdAt?: Date,
     updatedAt?: Date,
     deletedAt?: Date
 }
 
-export class InstitutionSequelize extends Model<InstitutionRow,Omit<InstitutionRow, 'id'>> {
+export class CustomerSequelize extends Model<CustomerRow,Omit<CustomerRow,'id'>> {
     declare id: number
     declare uuid: string
-    declare name: string
-    declare ruc: string
-    declare address: string
-    declare hasToAccounting: boolean
-    declare abbreviation: string
+    declare full_name: string
+    declare identification_type: string
+    declare identification: string
     declare readonly createdAt: Date
     declare readonly updatedAt: Date
     declare readonly deletedAt: Date
+    declare emails: string[]
+    declare phones: string[]
 }
 
-InstitutionSequelize.init({
+CustomerSequelize.init({
     id:{
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -38,30 +36,22 @@ InstitutionSequelize.init({
         type: DataTypes.UUID,
         allowNull:false
     },
-    name:{
+    full_name:{
         type: DataTypes.STRING,
         allowNull:false
     },
-    ruc:{
+    identification_type:{
         type: DataTypes.STRING,
         allowNull:false
     },
-    address:{
-        type: DataTypes.STRING,
-        allowNull:false
-    },
-    hasToAccounting:{
-        type: DataTypes.BOOLEAN,
-        allowNull:false
-    },
-    abbreviation:{
+    identification:{
         type: DataTypes.STRING,
         allowNull:false
     }
 },{
     sequelize,
     underscored:true,
-    tableName: "institution",
+    tableName: "customer",
     timestamps: true,
     paranoid: true
-})
+});

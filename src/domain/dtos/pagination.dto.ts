@@ -3,7 +3,7 @@ export default class PaginationDto {
         public page: number,
         public itemsPerPage: number,
         public orderKey: string | null,
-        public orderType: string | null,
+        public orderType: 'ASC' | 'DESC' | null,
         public search: string | null
     ) {}
 

@@ -25,4 +25,8 @@ export class CustomError extends Error{
     static internalSever(message:string = 'Internal error'){
         return new CustomError(500,message)
     }
+
+    static notImplemented(message:string = 'Not implemented'){
+        return new CustomError(501,message)
+    }
 }

@@ -4,12 +4,12 @@ export default class ProductTagDto {
     ){}
     static create(object:{[key:string]:any}):[string?,ProductTagDto?]{
         const {
-            name
+            value_tag
         } = object
         return [
             undefined,
             new ProductTagDto(
-                name
+                value_tag
             )
         ]
     }

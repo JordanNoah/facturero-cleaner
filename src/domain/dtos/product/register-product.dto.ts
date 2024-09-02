@@ -22,10 +22,10 @@ export default class RegisterProductDto {
             uuid,
             name,
             code,
-            labels,
+            tags,
             price,
-            has_iva,
-            percentage_code,
+            hasIva,
+            percentageCode,
             institution_id,
             createdAt,
             updatedAt,
@@ -33,8 +33,8 @@ export default class RegisterProductDto {
         } = object
 
         let labelsArray:ProductTagDto[] = []
-        for (let i = 0; i < labels.length; i++) {
-            const [error, productTag] = ProductTagDto.create(labels[i])            
+        for (let i = 0; i < tags.length; i++) {
+            const [error, productTag] = ProductTagDto.create(tags[i])            
             if (error) return [error]
             labelsArray.push(productTag!)
         }
@@ -48,8 +48,8 @@ export default class RegisterProductDto {
                 code,
                 labelsArray,
                 price,
-                has_iva,
-                percentage_code,
+                hasIva,
+                percentageCode,
                 institution_id,
                 createdAt,
                 updatedAt,

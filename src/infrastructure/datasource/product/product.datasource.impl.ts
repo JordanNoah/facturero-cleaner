@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, FindOptions } from "sequelize";
 import { ProductDatasource } from "../../../domain/datasource/product/product.datasource";
 import PaginationDto from "../../../domain/dtos/pagination.dto";
 import RegisterProductDto from "../../../domain/dtos/product/register-product.dto";
@@ -33,22 +33,29 @@ export class ProductDatasourceImpl extends ProductDatasource {
                 },
             })
 
-            let productTags: ProductTagEntity[]= []
-            for (let i = 0; i < labels.length; i++) {
-                const label = labels[i];
-                const productTag = await new ProductTagDatasourceImpl().createProductTag(label,product.id);
-                if(!productTag) throw CustomError.notFound("Product tag not found")
-                productTags.push(productTag)
+            const productTagDatasourceImpl = new ProductTagDatasourceImpl();
+            let productTagsEntity: ProductTagEntity[] = await productTagDatasourceImpl.getProductTagsByProductId(product.id);
+
+            const validTags = labels.map(tag => tag.name);
+            const notNeedTags = productTagsEntity.filter(tag => !validTags.includes(tag.value_tag));
+            for (let i = 0; i < notNeedTags.length; i++) {
+                await productTagDatasourceImpl.deleteProductTag(notNeedTags[i].id);
             }
 
-            if(!created) return ProductEntity.create(product);
+            let existingTags = await productTagDatasourceImpl.getProductTagsByProductId(product.id);
+            let missingTags = labels.filter(tag => !existingTags.map(tag => tag.value_tag).includes(tag.name));
+
+            for (let i = 0; i < missingTags.length; i++) {
+                existingTags.push(await productTagDatasourceImpl.createProductTag(missingTags[i],product.id));
+            }
+            product.tags = existingTags;
+            if(created) return ProductEntity.create(product);
 
             product.name = name;
             product.code = code;
             product.price = price;
             product.has_iva = has_iva;
             product.percentage_code = percentage_code;
-            product.tags = productTags;
 
             await product.save()
             return ProductEntity.create(product);
@@ -65,6 +72,7 @@ export class ProductDatasourceImpl extends ProductDatasource {
         try {
             const product = await this.getProductById(id);
             if (!product) throw CustomError.notFound("Product not found");
+            await new ProductTagDatasourceImpl().deleteProductTagsByProductId(id);
             await ProductSequelize.destroy({
                 where:{
                     id:id
@@ -72,6 +80,8 @@ export class ProductDatasourceImpl extends ProductDatasource {
             })
             return product;
         } catch (error) {
+            console.log(error);
+            
             if (error instanceof CustomError) {
                 throw error;
             }
@@ -82,6 +92,7 @@ export class ProductDatasourceImpl extends ProductDatasource {
         try {
             const product = await ProductSequelize.findByPk(id);
             if (!product) return null;
+            product.tags = await new ProductTagDatasourceImpl().getProductTagsByProductId(product.id);
             return ProductEntity.create(product);
         } catch (error) {
             if (error instanceof CustomError) {
@@ -98,6 +109,7 @@ export class ProductDatasourceImpl extends ProductDatasource {
                 }
             })
             if (!product) return null;
+            product.tags = await new ProductTagDatasourceImpl().getProductTagsByProductId(product.id);
             return ProductEntity.create(product);
         } catch (error) {
             if (error instanceof CustomError) {
@@ -109,8 +121,14 @@ export class ProductDatasourceImpl extends ProductDatasource {
     async getProducts(): Promise<ProductEntity[]> {
         try {
             const products = await ProductSequelize.findAll();
+            for (let i = 0; i < products.length; i++) {
+                const product = products[i];
+                const productTags = await new ProductTagDatasourceImpl().getProductTagsByProductId(product.id);
+                product.tags = productTags;
+            }
             return products.map(product => ProductEntity.create(product));
         } catch (error) {
+            console.log(error)
             if (error instanceof CustomError) {
                 throw error;
             }
@@ -132,12 +150,30 @@ export class ProductDatasourceImpl extends ProductDatasource {
                     ]
                 }
             }
+            
+            let order: Array<[string, 'ASC' | 'DESC']> = [];
 
-            let products = await ProductSequelize.findAll({
-                limit:limit,
-                offset:offset,
-                where:where
-            })
+            if (pagination.orderKey && pagination.orderType) {
+                order.push([pagination.orderKey, pagination.orderType]);
+            }
+
+            let options: FindOptions = {
+                where: where,
+                order: order
+            }
+
+            if(pagination.itemsPerPage !== -1){
+                options.limit = limit;
+                options.offset = offset;
+            }
+
+            let products = await ProductSequelize.findAll(options)
+
+            for (let i = 0; i < products.length; i++) {
+                const product = products[i];
+                const productTags = await new ProductTagDatasourceImpl().getProductTagsByProductId(product.id);
+                product.tags = productTags;
+            }
 
             const totalItems = await this.getTotalCount();
 
@@ -147,6 +183,8 @@ export class ProductDatasourceImpl extends ProductDatasource {
                 totalPages:Math.ceil(totalItems/pagination.itemsPerPage)
             })
         } catch (error) {
+            console.log(error);
+            
             if (error instanceof CustomError) {
                 throw error;
             }

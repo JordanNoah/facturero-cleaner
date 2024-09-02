@@ -19,6 +19,8 @@ export class ProductTagDatasourceImpl extends ProductTagDatasource {
             });
             return ProductTagEntity.create(productTag);
         } catch (error) {
+            console.log(error);
+            
             if (error instanceof CustomError) {
                 throw error;
             }
@@ -38,6 +40,18 @@ export class ProductTagDatasourceImpl extends ProductTagDatasource {
             throw CustomError.internalSever();
         }
     }
+    async deleteProductTagsByProductId(productId: number): Promise<void> {
+        try {
+            await ProductTagSequelize.destroy({where:{product_id:productId}});
+        } catch (error) {
+            console.log(error);
+            
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever();
+        }
+    }
     async getProductTagById(id: number): Promise<ProductTagEntity | null> {
         try {
             const productTag = await ProductTagSequelize.findOne({where:{id:id}})
@@ -50,11 +64,10 @@ export class ProductTagDatasourceImpl extends ProductTagDatasource {
             throw CustomError.internalSever();
         }
     }
-    async getProductTagsByProductId(productId: number): Promise<ProductTagEntity | null> {
+    async getProductTagsByProductId(productId: number): Promise<ProductTagEntity[]> {
         try {
-            const productTag = await ProductTagSequelize.findAll({where:{product_id:productId}})
-            if(!productTag) return null;
-            return ProductTagEntity.create(productTag);
+            const productsTag = await ProductTagSequelize.findAll({where:{product_id:productId}})
+            return productsTag.map(productTag => ProductTagEntity.create(productTag));
         } catch (error) {
             if (error instanceof CustomError) {
                 throw error;

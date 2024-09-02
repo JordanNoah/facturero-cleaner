@@ -43,6 +43,7 @@ export class ProductRoutes {
                 let product = await repository.createProduct(registerProductDto!)
                 return c.json(product)
             } catch (error) {
+                c.status(500)
                 return c.json({ message: "Error creating product", error })
             }
         })
@@ -58,7 +59,7 @@ export class ProductRoutes {
         router.get('/getByPagination', async (c) => {
             try {
                 const [error, paginationDto] = PaginationDto.create(c.req.query())
-                if(error) return c.json({ message: "Error finding invoices", error })
+                if(error) return c.json({ error })
                 return c.json(await repository.getProductsByPagination(paginationDto!))
             } catch (error) {
                 return c.json({ message: "Error getting products", error })
