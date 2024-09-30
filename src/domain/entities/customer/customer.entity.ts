@@ -5,6 +5,7 @@ export class CustomerEntity {
         public id:number,
         public uuid:string,
         public fullName:string,
+        public address:string | null,
         public identificationType:string,
         public identification:string,
         public emails:string[],
@@ -14,11 +15,12 @@ export class CustomerEntity {
         public deletedAt:Date | null
     ){}
     static create(customer:CustomerSequelize): CustomerEntity {
-        const {id,uuid,full_name,identification_type,identification,emails,phones,createdAt,updatedAt,deletedAt} = customer;
+        const {id,uuid,full_name,address,identification_type,identification,emails,phones,createdAt,updatedAt,deletedAt} = customer;
         return new CustomerEntity(
             id,
             uuid,
             full_name,
+            address,
             identification_type,
             identification,
             emails,

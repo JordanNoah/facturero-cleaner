@@ -29,6 +29,7 @@ export class ProductDatasourceImpl extends ProductDatasource {
                     price:price,
                     has_iva:has_iva,
                     percentage_code:percentage_code,
+                    price_with_iva: has_iva ? price * 1.12 : null,
                     institution_id:institution_id
                 },
             })
@@ -135,7 +136,6 @@ export class ProductDatasourceImpl extends ProductDatasource {
             throw CustomError.internalSever();
         }
     }
-    
     async getProductsByPagination(pagination: PaginationDto): Promise<ProductPaginationEntity> {
         try {
             let offset = (pagination.page - 1) * pagination.itemsPerPage
@@ -191,11 +191,40 @@ export class ProductDatasourceImpl extends ProductDatasource {
             throw CustomError.internalSever();
         }
     }
-
     async getTotalCount(): Promise<number> {
         try {
             return await ProductSequelize.count();
         } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever();
+        }
+    }
+    async getProductByType(type: string, value:string): Promise<ProductEntity[]> {
+        try {
+            let where = {}
+            if (type === "code") {
+                where = {
+                    code: {
+                        [Op.like]: `%${value}%`
+                    }
+                }
+            }
+            if (type === "name") {
+                where = {
+                    name: value
+                }
+            }
+
+            const products = await ProductSequelize.findAll({
+                where: where
+            })
+
+            return products.map(product => ProductEntity.create(product));
+        } catch (error) {
+            console.log(error);
+            
             if (error instanceof CustomError) {
                 throw error;
             }

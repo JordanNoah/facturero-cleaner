@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid"
 export class InstitutionDatasourceImpl implements InstitutionDatasource {
     async register(registerInstitutionDto: RegisterInstitutionDto): Promise<InstitutionEntity> {
         try {
-            const {name,abbreviation} = registerInstitutionDto;
+            const {name,abbreviation,address,hasToAccounting,ruc} = registerInstitutionDto;
             const [institution,created] = await InstitutionSequelize.findOrCreate({
                 where:{
                     abbreviation:abbreviation
@@ -16,18 +16,13 @@ export class InstitutionDatasourceImpl implements InstitutionDatasource {
                 defaults:{
                     name:name,
                     abbreviation:abbreviation,
-                    uuid:uuidv4()
+                    address:address,
+                    uuid:uuidv4(),
+                    ruc:ruc,
+                    hasToAccounting:hasToAccounting
                 }
             })
-            return new InstitutionEntity(
-                institution.id,
-                institution.name,
-                institution.abbreviation,
-                institution.uuid,
-                institution.createdAt,
-                institution.updatedAt,
-                institution.deletedAt
-            )
+            return InstitutionEntity.create(institution)
         }catch (error){
             if (error instanceof CustomError){
                 throw error;
@@ -42,8 +37,10 @@ export class InstitutionDatasourceImpl implements InstitutionDatasource {
             if (!institution){
                 return null
             }
-            return new InstitutionEntity(institution.id,institution.uuid,institution.name,institution.abbreviation,institution.createdAt,institution.updatedAt,institution.deletedAt)
+            return InstitutionEntity.create(institution)
         }catch (error){
+            console.log(error);
+            
             if (error instanceof CustomError){
                 throw error;
             }
@@ -57,7 +54,7 @@ export class InstitutionDatasourceImpl implements InstitutionDatasource {
             let institutionEntities: InstitutionEntity[] = [];
             for (let i = 0; i < institutions.length; i++) {
                 const institutionSequelize = institutions[i];
-                const institutionEntity = new InstitutionEntity(institutionSequelize.id,institutionSequelize.uuid,institutionSequelize.name,institutionSequelize.abbreviation,institutionSequelize.createdAt,institutionSequelize.updatedAt,institutionSequelize.deletedAt)
+                const institutionEntity = InstitutionEntity.create(institutionSequelize)
                 institutionEntities.push(institutionEntity)
             }
             return institutionEntities
@@ -81,7 +78,7 @@ export class InstitutionDatasourceImpl implements InstitutionDatasource {
 
             if (!institutionSequelize) throw CustomError.notFound(`Institution with id ${uuid} not found`)
 
-            return new InstitutionEntity(institutionSequelize.id,institutionSequelize.uuid,institutionSequelize.name,institutionSequelize.abbreviation,institutionSequelize.createdAt,institutionSequelize.updatedAt,institutionSequelize.deletedAt)
+            return InstitutionEntity.create(institutionSequelize)
         }catch (error){
             if (error instanceof CustomError){
                 throw error;

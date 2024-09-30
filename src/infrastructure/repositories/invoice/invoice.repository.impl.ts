@@ -9,8 +9,8 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
         private readonly invoiceDatasource: InvoiceDatasource
     ) {}
 
-    createInvoice(): Promise<InvoiceEntity> {
-        return this.invoiceDatasource.createInvoice()
+    createInvoice(institutionId:number): Promise<InvoiceEntity> {
+        return this.invoiceDatasource.createInvoice(institutionId)
     }
 
     saveInvoice(invoiceDto: InvoiceDto): Promise<any> {
@@ -31,5 +31,9 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
 
     getInvoicesByPagination(paginationDto: PaginationDto): Promise<InvoiceEntity[]> {
         return this.invoiceDatasource.getInvoicesByPagination(paginationDto)
+    }
+
+    getNextInvoiceNumber(institutionId: number, establishment: string, emissionPoint: string): Promise<string> {
+        return this.invoiceDatasource.getNextInvoiceNumber(institutionId, establishment, emissionPoint)
     }
 }

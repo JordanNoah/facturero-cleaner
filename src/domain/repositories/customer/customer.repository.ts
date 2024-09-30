@@ -7,4 +7,5 @@ export default abstract class CustomerRepository {
     abstract getCustomerById(id: number): Promise<CustomerEntity | null>;
     abstract getCustomers(): Promise<CustomerEntity[]>;
     abstract getCustomerByUuid(uuid: string): Promise<CustomerEntity | null>;
+    abstract findCustomerByType(type: string, value: string): Promise<CustomerEntity[]>;
 }

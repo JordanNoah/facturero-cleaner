@@ -8,6 +8,7 @@ import WithHoldingDto from "./withHolding.dto"
 
 export default class InvoiceDto {
     constructor(
+        public institutionId: number,
         public invoice: string | null,
         public financialInformationDto: FinancialInformationDto,
         public invoiceInfoDto: InvoiceInfoDto,
@@ -18,7 +19,7 @@ export default class InvoiceDto {
     ) {}
 
     static create(object:{[key:string]:any}): [string?, InvoiceDto?] {
-        const {invoice, financialInformation, invoiceInfo, details, reimbursements, withholdings, additionalDetails} = object
+        const {institutionId, invoice, financialInformation, invoiceInfo, details, reimbursements, withholdings, additionalDetails} = object
 
         const [errorFinancialInformationDto, financialInformationDto] = FinancialInformationDto.save(financialInformation)
         if (errorFinancialInformationDto) return [errorFinancialInformationDto, undefined]
@@ -64,6 +65,7 @@ export default class InvoiceDto {
         return [
             undefined,
             new InvoiceDto(
+                institutionId,
                 invoice,
                 financialInformationDto!,
                 invoiceInfoDto!,
@@ -76,7 +78,7 @@ export default class InvoiceDto {
     }
 
     static save(object:{[key:string]:any}): [string?, InvoiceDto?] {
-        const {invoice, financialInformation, invoiceInfo, details, reimbursements, withholdings, additionalDetails} = object
+        const {institutionId, invoice, financialInformation, invoiceInfo, details, reimbursements, withholdings, additionalDetails} = object
 
         const [errorFinancialInformationDto, financialInformationDto] = FinancialInformationDto.save(financialInformation)
         if (errorFinancialInformationDto) return [errorFinancialInformationDto, undefined]
@@ -122,6 +124,7 @@ export default class InvoiceDto {
         return [
             undefined,
             new InvoiceDto(
+                institutionId,
                 invoice,
                 financialInformationDto!,
                 invoiceInfoDto!,

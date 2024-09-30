@@ -16,6 +16,7 @@ export default class CustomerDatasourceImpl extends CustomerDatasource {
             const {
                full_name,
                emails,
+               address,
                identification,
                identification_type,
                phones 
@@ -27,6 +28,7 @@ export default class CustomerDatasourceImpl extends CustomerDatasource {
                 },
                 defaults:{
                     full_name:full_name,
+                    address:address,
                     identification:identification,
                     identification_type:identification_type,
                     uuid:uuidv4()
@@ -73,6 +75,7 @@ export default class CustomerDatasourceImpl extends CustomerDatasource {
             customer.full_name = full_name;
             customer.identification = identification;
             customer.identification_type = identification_type;
+            customer.address = address;
             
             await customer.save();
             return CustomerEntity.create(customer);
@@ -220,6 +223,37 @@ export default class CustomerDatasourceImpl extends CustomerDatasource {
     async getTotalCount(): Promise<number> {
         try {
             return await CustomerSequelize.count();
+        } catch (error) {
+            if (error instanceof CustomError) {
+                throw error;
+            }
+            throw CustomError.internalSever();
+        }
+    }
+    async findCustomerByType(type: string, value: string): Promise<CustomerEntity[]> {
+        try {
+            let where = {};
+            if (type == "fullname"){
+                where = {
+                    full_name:{
+                        [Op.like]:`%${value}%`
+                    }
+                }
+            }else if(type == "identification"){
+                where = {
+                    identification:{
+                        [Op.like]:`%${value}%`
+                    }
+                }
+            }else{
+                throw CustomError.badRequest("Invalid type");
+            }
+
+            const customers = await CustomerSequelize.findAll({
+                where: where
+            });
+
+            return customers.map(customer => CustomerEntity.create(customer));
         } catch (error) {
             if (error instanceof CustomError) {
                 throw error;

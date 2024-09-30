@@ -1,12 +1,18 @@
 export class RegisterInstitutionDto {
     constructor(
-        public name: string,
-        public abbreviation: string
+        public name:string,
+        public abbreviation:string,
+        public ruc:string,
+        public address:string,
+        public hasToAccounting:boolean
     ) {}
 
     static create(object:{[key:string]:any}):[string?,RegisterInstitutionDto?]{
         const {
             name,
+            ruc,
+            address,
+            hasToAccounting,
             abbreviation
         } = object
 
@@ -16,7 +22,10 @@ export class RegisterInstitutionDto {
             undefined,
             new RegisterInstitutionDto(
                 name,
-                abbreviation
+                abbreviation,
+                ruc,
+                address,
+                hasToAccounting
             )
         ]
     }

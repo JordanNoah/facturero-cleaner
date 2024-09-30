@@ -14,10 +14,12 @@ import AdditionalDetailEntity from "../../../../domain/entities/invoice/addition
 import { AdditionalDetailSequelize } from "./AdditionalDetail";
 import { InvoiceAdditionalDetailEntity } from "../../../../domain/entities/invoice/invoiceAdditionalDetail.entity";
 import { InvoiceAdditionalDetailSequelize } from "./InvoiceAdditionalDetail";
+import { InstitutionSequelize } from "../institution/Institution";
 
 interface InvoiceRow {
     id: number,
     uuid: string,
+    institutionId: number,
     createdAt?: Date,
     updatedAt?: Date,
     deletedAt?: Date
@@ -26,6 +28,7 @@ interface InvoiceRow {
 export class InvoiceSequelize extends Model<InvoiceRow,Omit<InvoiceRow,'id'>> {
     declare id: number
     declare uuid: string
+    declare institutionId: number
     declare financialInformation: FinancialInformationSequelize | FinancialInformationEntity | null
     declare invoiceInfo: InvoiceInfoSequelize | InvoiceInfoEntity | null
     declare details: DetailSequelize[] | DetailEntity[]
@@ -46,6 +49,14 @@ InvoiceSequelize.init({
     uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
+    },
+    institutionId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: InstitutionSequelize,
+            key: 'id'
+        }
     }
 },{
     sequelize,

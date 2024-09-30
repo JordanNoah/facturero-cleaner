@@ -3,6 +3,7 @@ import CustomerDatasourceImpl from "../../../infrastructure/datasource/customer/
 import CustomerRepositoryImpl from "../../../infrastructure/repositories/customer/customer.repository.impl"
 import CustomerDto from "../../../domain/dtos/customer/customer.dto"
 import PaginationDto from "../../../domain/dtos/pagination.dto"
+import CustomerByTypeDto from "../../../domain/dtos/customer/customerByType"
 
 export class CustomerRoutes {
     constructor() {}
@@ -59,6 +60,16 @@ export class CustomerRoutes {
                 const [error, paginationDto] = PaginationDto.create(c.req.query())
                 if(error) return c.json({error})
                 return c.json(await datasource.getCustomersByPagination(paginationDto!))
+            } catch (error) {
+                return c.json({error})
+            }
+        })
+
+        router.get('/byType', async (c:Context) => {
+            try {
+                const [error, customerByTypeDto] = CustomerByTypeDto.create(c.req.query())
+                if(error) return c.json({error})
+                return c.json(await datasource.findCustomerByType(customerByTypeDto!.type, customerByTypeDto!.value))
             } catch (error) {
                 return c.json({error})
             }

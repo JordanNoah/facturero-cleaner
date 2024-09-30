@@ -10,4 +10,5 @@ export abstract class ProductDatasource {
     abstract deleteProduct(id: number): Promise<ProductEntity>;
     abstract getProductsByPagination(pagination:PaginationDto): Promise<ProductPaginationEntity>;
     abstract getTotalCount(): Promise<number>;
+    abstract getProductByType(type: string, value:string): Promise<ProductEntity[]>;
 }

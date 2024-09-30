@@ -5,6 +5,7 @@ interface CustomerRow {
     id: number,
     uuid: string,
     full_name: string,
+    address: string | null,
     identification_type: string,
     identification: string,
     createdAt?: Date,
@@ -15,7 +16,8 @@ interface CustomerRow {
 export class CustomerSequelize extends Model<CustomerRow,Omit<CustomerRow,'id'>> {
     declare id: number
     declare uuid: string
-    declare full_name: string
+    declare full_name: string   
+    declare address: string | null
     declare identification_type: string
     declare identification: string
     declare readonly createdAt: Date
@@ -39,6 +41,10 @@ CustomerSequelize.init({
     full_name:{
         type: DataTypes.STRING,
         allowNull:false
+    },
+    address:{
+        type: DataTypes.STRING,
+        allowNull:true
     },
     identification_type:{
         type: DataTypes.STRING,

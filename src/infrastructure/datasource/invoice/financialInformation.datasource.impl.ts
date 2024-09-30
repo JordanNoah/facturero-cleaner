@@ -4,6 +4,21 @@ import { FinancialInformationEntity } from "../../../domain/entities/invoice/fin
 import { FinancialInformationSequelize } from "../../database/models/invoice/FinancialInformation";
 
 export class FinancialInformationDatasourceImpl extends FinancialInformationDatasource {
+    async getLastFinancialInformationByInvoiceIdEstablismentAndEmissionPoint(invoiceId: number, establishment: string, emissionPoint: string): Promise<FinancialInformationEntity | null> {
+        try {
+            const financialInformation = await FinancialInformationSequelize.findOne({
+                where:{
+                    invoiceId: invoiceId,
+                    establishment: establishment,
+                    emissionPoint: emissionPoint
+                }
+            })
+            if(!financialInformation) return null
+            return FinancialInformationEntity.create(financialInformation)
+        } catch (error) {
+            throw new Error("Method not implemented.");
+        }
+    }
     createFinancialInformation(): Promise<FinancialInformationEntity> {
         throw new Error("Method not implemented.");
     }

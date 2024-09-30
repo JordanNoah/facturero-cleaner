@@ -1,6 +1,7 @@
 export default class CustomerDto {
     constructor(
         public full_name: string,
+        public address: string | null,
         public identification_type: string,
         public identification: string,
         public emails: string[],
@@ -12,6 +13,7 @@ export default class CustomerDto {
             fullName,
             identificationType,
             identification,
+            address,
             emails,
             phones
         } = object
@@ -25,6 +27,7 @@ export default class CustomerDto {
             undefined, 
             new CustomerDto(
                 fullName,
+                address,
                 identificationType,
                 identification,
                 emails,

@@ -16,16 +16,49 @@ import PaginationDto from "../../../domain/dtos/pagination.dto";
 import { FinancialInformationSequelize } from "../../database/models/invoice/FinancialInformation";
 import { InvoiceInfoSequelize } from "../../database/models/invoice/InvoiceInfo";
 import { Op } from "sequelize";
+import { InstitutionDatasourceImpl } from "../institution/institution.datasource.impl";
 
 export class InvoiceDatasourceImpl extends InvoiceDatasource {
-    async createInvoice(): Promise<InvoiceEntity> {
+    async getNextInvoiceNumber(institutionId: number, establishment: string, emissionPoint: string): Promise<string> {
         try {
+            const institution = await new InstitutionDatasourceImpl().getById(institutionId)
+            if(!institution) throw new Error("Institution not found")
+            const lastInvoice = await InvoiceSequelize.findOne({
+                order: [['id', 'DESC']]
+            })
+            const financialInformation = await new FinancialInformationDatasourceImpl().getLastFinancialInformationByInvoiceIdEstablismentAndEmissionPoint(lastInvoice!.id,establishment,emissionPoint)
+
+            if(!financialInformation){
+                const number = 1;
+                return `${establishment}-${emissionPoint}-${number.toString().padStart(9, '0')}`
+            }
+
+            return `${financialInformation!.establishment}-${financialInformation!.emissionPoint}-${(financialInformation!.sequential+1)}`
+        } catch (error) {
+            console.log(error);
+            
+            if (error instanceof Error) {
+                throw error
+            }
+            throw new Error("Method not implemented.");
+        }
+    }
+    async createInvoice(institutionId:number): Promise<InvoiceEntity> {
+        try {
+
+            console.log(institutionId);
+            const institution = await new InstitutionDatasourceImpl().getById(institutionId)
+            
+            if(!institution) throw new Error("Institution not found")
             const invoice = await InvoiceSequelize.create({
-                uuid: v4()
+                uuid: v4(),
+                institutionId: 1
             })
 
             return InvoiceEntity.create(invoice)
         } catch (error) {
+            console.log(error);
+            
             throw new Error("Method not implemented.");
         }
     }
@@ -70,9 +103,13 @@ export class InvoiceDatasourceImpl extends InvoiceDatasource {
     }
     async saveInvoice(invoiceDto: InvoiceDto): Promise<InvoiceEntity> {
         try {
+
+            const institution = await new InstitutionDatasourceImpl().getById(invoiceDto.institutionId)
+            if(!institution) throw new Error("Institution not found")
+
             let invoiceEntity: InvoiceEntity;
-            if(!invoiceDto.invoice) invoiceEntity = await this.createInvoice();
-            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, false); if(!invoice) { invoice = await this.createInvoice() } invoiceEntity = invoice }
+            if(!invoiceDto.invoice) invoiceEntity = await this.createInvoice(invoiceDto.institutionId);
+            else { let invoice = await this.getInvoiceByUuid(invoiceDto.invoice, false); if(!invoice) { invoice = await this.createInvoice(invoiceDto.institutionId) } invoiceEntity = invoice }
             
             const financialInformationEntity = await new FinancialInformationDatasourceImpl().saveFinancialInformation(invoiceDto.financialInformationDto!, invoiceEntity.id!)
             const invoiceInfo = await new InvoiceInfoDatasourceImpl().saveInvoiceInfo(invoiceDto.invoiceInfoDto!, invoiceEntity.id!)

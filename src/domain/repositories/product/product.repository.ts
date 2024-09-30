@@ -9,4 +9,5 @@ export abstract class ProductRepository {
     abstract createProduct(product: RegisterProductDto): Promise<ProductEntity>;
     abstract deleteProduct(id: number): Promise<ProductEntity>;
     abstract getProductsByPagination(pagination:PaginationDto): Promise<ProductPaginationEntity>;
+    abstract getProductByType(type: string, value:string): Promise<ProductEntity[]>;
 }

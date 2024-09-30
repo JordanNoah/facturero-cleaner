@@ -8,4 +8,5 @@ export default abstract class FinancialInformationDatasource {
     abstract deleteFinancialInformation(uuid: string): Promise<FinancialInformationEntity>;
     abstract getFinancialInformationByUuid(uuid: string): Promise<FinancialInformationEntity | null>;
     abstract getFinancialInformationByInvoiceId(invoiceId: number): Promise<FinancialInformationEntity | null>;
+    abstract getLastFinancialInformationByInvoiceIdEstablismentAndEmissionPoint(invoiceId: number, establishment: string, emissionPoint: string): Promise<FinancialInformationEntity | null>;
 }

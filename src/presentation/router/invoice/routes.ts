@@ -17,8 +17,8 @@ export class InvoiceRoutes {
         const quickAccessRepository = new QuickAccessInvoiceRepositoryImpl(quickAccessDatasource)
 
         router.post("/create", async (c: Context) => {
-            try {
-                const invoice = await repository.createInvoice()
+            try {                
+                const invoice = await repository.createInvoice((await c.req.json()).institutionId)
                 return c.json({ message: "Invoice created", invoice })
             } catch (error) {
                 return c.json({ message: "Error creating invoice", error })
@@ -65,6 +65,22 @@ export class InvoiceRoutes {
                 return c.json(invoices)
             } catch (error) {
                 return c.json({ message: "Error finding invoices", error })
+            }
+        })
+
+        router.get("/getNextInvoiceNumber", async (c: Context) => {
+            try {
+                const query = c.req.query()
+                const institutionId = parseInt(query.institutionId)
+                const establishment = query.establishment
+                const emissionPoint = query.emissionPoint
+                console.log(query);
+                console.log(institutionId,establishment,emissionPoint);
+                
+                
+                return c.json(await datasource.getNextInvoiceNumber(institutionId,establishment,emissionPoint))
+            } catch (error) {
+                return c.json({ message: "Error getting next invoice number", error })
             }
         })
 

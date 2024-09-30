@@ -20,11 +20,16 @@ import { ProductTagSequelize } from "./models/product/ProductTags"
 import { CustomerSequelize } from "./models/customer/Customer"
 import { CustomerEmailSequelize } from "./models/customer/CustomerEmail"
 import { CustomerPhoneSequelize } from "./models/customer/CustomerPhone"
+import { EstablishmentSequelize } from "./models/establishment/Establishment"
+import { EmisionPointSequelize } from "./models/emisionPoint/EmisionPoint"
+import { SriConfigurationIvaSequelize } from "./models/sri/SriConfigurationIva"
+import { IvaSeeder, IvaSeederUp } from "./seeders/sri/iva.seeder"
 
 
 export const DbSequelize = (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
+            await InstitutionSequelize.sync()
             await InvoiceSequelize.sync()
             await FinancialInformationSequelize.sync()
             await InvoiceInfoSequelize.sync()
@@ -41,12 +46,17 @@ export const DbSequelize = (): Promise<void> => {
             await InvoiceAdditionalDetailSequelize.sync()
             await InvoiceDocumentSequelize.sync()
             await QuickAccessInvoiceSequelize.sync()
-            await InstitutionSequelize.sync()
             await ProductSequelize.sync()
             await ProductTagSequelize.sync()
             await CustomerSequelize.sync()
             await CustomerEmailSequelize.sync()
             await CustomerPhoneSequelize.sync()
+            await EstablishmentSequelize.sync()
+            await EmisionPointSequelize.sync()
+            await SriConfigurationIvaSequelize.sync()
+
+
+            await IvaSeederUp()
             resolve()
         } catch (error) {
             reject(error)

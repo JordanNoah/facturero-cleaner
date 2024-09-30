@@ -66,6 +66,16 @@ export class ProductRoutes {
             }
         })
 
+        router.get('/byType', async (c) => {
+            try {
+                const type = c.req.query('type')
+                const value = c.req.query('value')
+                if (!type || !value) return c.json({ message: "Type and value are required" })
+                return c.json(await repository.getProductByType(type, value))
+            } catch (error) {
+                return c.json({ message: "Error getting products", error })
+            }
+        })
         return router
     }
 }

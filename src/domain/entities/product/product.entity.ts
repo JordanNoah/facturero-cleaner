@@ -32,8 +32,10 @@ export class ProductEntity {
 
         let tagsArray:ProductTagEntity[] = []
 
-        for (let i = 0; i < tags.length; i++) {
-            tagsArray.push(ProductTagEntity.create(tags[i]))
+        if (tags) {
+            for (let i = 0; i < tags.length; i++) {
+                tagsArray.push(ProductTagEntity.create(tags[i]))
+            }
         }
 
         return new ProductEntity(

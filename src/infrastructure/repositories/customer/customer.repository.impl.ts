@@ -27,4 +27,8 @@ export default class CustomerRepositoryImpl implements CustomerRepository {
     getCustomerByUuid(uuid: string): Promise<CustomerEntity | null> {
         return this.customerDatasource.getCustomerByUuid(uuid);
     }
+
+    findCustomerByType(type: string, value: string): Promise<CustomerEntity[]> {
+        return this.customerDatasource.findCustomerByType(type, value);
+    }
 }

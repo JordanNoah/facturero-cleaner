@@ -12,6 +12,7 @@ interface ProductRow {
     price: number,
     has_iva: boolean,
     percentage_code: number | null,
+    price_with_iva: number | null,
     institution_id: number,
     createdAt?: null | Date,
     updatedAt?: null | Date,
@@ -26,6 +27,7 @@ export class ProductSequelize extends Model<ProductRow, Omit<ProductRow, 'id'>> 
     declare price: number
     declare has_iva: boolean
     declare percentage_code: number | null
+    declare price_with_iva: number | null
     declare institution_id: number
     declare readonly createdAt: null | Date
     declare readonly updatedAt: null | Date
@@ -63,6 +65,10 @@ ProductSequelize.init({
     },
     percentage_code: {
         type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    price_with_iva: {
+        type: DataTypes.DECIMAL,
         allowNull: true
     },
     institution_id: {

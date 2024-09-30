@@ -10,4 +10,5 @@ export default abstract class CustomerDatasource {
     abstract getCustomerByUuid(uuid: string): Promise<CustomerEntity | null>;
     abstract getCustomersByPagination(pagination:PaginationDto): Promise<CustomerPaginationEntity>;
     abstract getTotalCount(): Promise<number>;
+    abstract findCustomerByType(type: string, value: string): Promise<CustomerEntity[]>;
 }
